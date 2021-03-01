@@ -1,6 +1,10 @@
 package site.bitlab16;
 
+import site.bitlab16.kafka_producer.Consumer;
+import site.bitlab16.model.SourceRecord;
+
 import javax.swing.*;
+import java.util.concurrent.*;
 
 /**
  * Hello world!
@@ -23,12 +27,20 @@ public class App
         }
 
 */
+        BlockingDeque<SourceRecord> outQueue = new LinkedBlockingDeque<>();
+
+        ExecutorService executor = Executors.newCachedThreadPool();
+
+        String kafkaBootstrapServers = "kafka-core:29092";
+
         SwingUtilities.invokeLater(() -> {
-            Simulator example = new Simulator("---nome finestra---");
+            Simulator example = new Simulator("---nome finestra---", outQueue);
             example.setSize(800, 400);
             example.setLocationRelativeTo(null);
             example.setVisible(true);
             example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         });
+        Consumer consumer = new Consumer("Simulatore 1", kafkaBootstrapServers, outQueue);
+        executor.execute(consumer);
     }
 }

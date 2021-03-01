@@ -8,6 +8,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.Minute;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
+import site.bitlab16.model.SourceRecord;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,13 +16,19 @@ import java.io.FileWriter;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class Simulator extends JFrame {
 
     final static long serialVersionUID = 1L;
 
-    public Simulator(String title) {  
+    BlockingDeque<SourceRecord> outQueue;
+
+    public Simulator(String title, BlockingDeque<SourceRecord> outQueue) {
         super(title);
+
+        this.outQueue = outQueue;
 
         SimulatedSource s1 = new Source1();
 
@@ -46,6 +53,7 @@ public class Simulator extends JFrame {
                     
                 System.out.println("Sorgente1; " + when.getMinute() + "; " + num);
                 out.write("Sorgente1; " + when.getMinute() + "; " + num + "\n");
+                outQueue.add(new SourceRecord(1L, when, num));
                 
                 when.advance();
                 when.advance();
