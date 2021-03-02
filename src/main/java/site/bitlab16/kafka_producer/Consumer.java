@@ -1,11 +1,11 @@
 package site.bitlab16.kafka_producer;
 
-import com.google.gson.JsonSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.LongSerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import site.bitlab16.model.JsonSerializer;
 import site.bitlab16.model.SourceRecord;
 
 import java.util.Properties;
@@ -28,7 +28,7 @@ public class Consumer implements Runnable, AutoCloseable {
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         properties.put(ProducerConfig.CLIENT_ID_CONFIG, clientName);
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class.getName());
-        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class.getName());
 
         kafkaProducer = new KafkaProducer<Long, SourceRecord>(properties);
     }
