@@ -31,7 +31,7 @@ public class App
 
         ExecutorService executor = Executors.newCachedThreadPool();
 
-        String kafkaBootstrapServers = "kafka1:9091";
+        String kafkaBootstrapServers = "127.0.0.1:9091";
 
         SwingUtilities.invokeLater(() -> {
             Simulator example = new Simulator("---nome finestra---", outQueue);
