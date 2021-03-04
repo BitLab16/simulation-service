@@ -1,86 +1,65 @@
 package site.bitlab16;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.data.time.Minute;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.time.TimeSeriesCollection;
-import site.bitlab16.model.SourceRecord;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
 import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
 
-public class Simulator extends JFrame {
+import org.jfree.data.time.Minute;
+import org.jfree.data.time.TimeSeries;
 
-    final static long serialVersionUID = 1L;
+import site.bitlab16.model.SourceRecord;
+import site.bitlab16.sources.SimulatedSource;
+import site.bitlab16.sources.Source1;
+
+public class Simulator implements Runnable {
 
     BlockingDeque<SourceRecord> outQueue;
+    
+    private SimulatedSource sources[];
 
-    public Simulator(String title, BlockingDeque<SourceRecord> outQueue) {
-        super(title);
+    private ArrayList<TimeSeries> series;
+
+    public Simulator(BlockingDeque<SourceRecord> outQueue) {
 
         this.outQueue = outQueue;
 
-        SimulatedSource s1 = new Source1();
+        sources = new SimulatedSource[] { new Source1() };
+        series = new ArrayList<>();
+    }
+    
+    @Override
+    public void run() {
 
+        /// INIT VARS
         TimeInstant when = new TimeInstant(new GregorianCalendar(2019, Calendar.JANUARY, 1), 0);
         TimeInstant end = new TimeInstant(new GregorianCalendar(2019, Calendar.JANUARY, 2), 0);
+        if (App.BUILD_MODE == App.ApplicationScope.DEBUG) {
+            for (int i = 0; i < sources.length; i++) {
+                series.add( new TimeSeries("Series" + (i+1) + "_1", Minute.class) );
+                series.add( new TimeSeries("Series" + (i+1) + "_2", Minute.class) );
+            }
+        }
+        Random random = new Random();
+        
+        while ( ! when.equals(end) ) {
 
-        TimeSeries series = new TimeSeries("Series1", Minute.class);
-        TimeSeries series2 = new TimeSeries("Series2", Minute.class);
-
-        try (FileWriter out = new FileWriter("data.csv") ) {
-            while ( ! when.equals(end) ) {
-
-                int num = s1.getValue(when);
-                Random random = new Random();
-                long offset = Math.round(random.nextGaussian()*3*((num+5)/65.));
-
-                //System.out.println(when + " " + num);
-                series.add(when.getMinute(), Math.max(0, num+offset));
+            for (int i = 0; i < sources.length; i++) {
                 
-                series2.add(when.getMinute(), num);
+                if (sources[i].shouldPublish(when)) {
 
+                    int num = sources[i].getValue(when);
+                    int offset = (int)Math.round(random.nextGaussian()*3*((num+5)/65.));
                     
-                System.out.println("Sorgente1; " + when.getMinute() + "; " + num);
-                out.write("Sorgente1; " + when.getMinute() + "; " + num + "\n");
-                outQueue.add(new SourceRecord(1L, when, num));
-                
-                when.advance();
-                when.advance();
-                when.advance();
-                when.advance();
-                when.advance();
+                    outQueue.add(new SourceRecord(1L, when, num+offset));
+                    
+                }
+
                 when.advance();
             }
-        } catch(Exception e) {
         }
         
-        TimeSeriesCollection tsc = new TimeSeriesCollection();
-        tsc.addSeries(series);
-        tsc.addSeries(series2);
-        
-        JFreeChart chart = ChartFactory.createTimeSeriesChart(
-            "GRAFICO PRESENZE", "Date", "Number", tsc, false, false, false);  
-      
-        XYPlot plot = (XYPlot)chart.getPlot();
-        plot.setBackgroundPaint(new Color(255,255, 127));
-        DateAxis y = new DateAxis();
-        y.setLowerBound(0);
-        y.setUpperBound(60);
-        plot.setRangeAxis(y);
-          
-        ChartPanel panel = new ChartPanel(chart);
-        setContentPane(panel);
       }  
 
 

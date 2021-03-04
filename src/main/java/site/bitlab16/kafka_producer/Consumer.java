@@ -1,16 +1,15 @@
 package site.bitlab16.kafka_producer;
 
-import com.google.gson.JsonSerializer;
+import java.util.Properties;
+import java.util.concurrent.BlockingDeque;
+
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.LongSerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import site.bitlab16.model.SourceRecord;
 
-import java.util.Properties;
-import java.util.concurrent.BlockingDeque;
-import java.util.logging.Logger;
+import site.bitlab16.model.SourceRecord;
 
 public class Consumer implements Runnable, AutoCloseable {
 

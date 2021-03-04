@@ -1,46 +1,51 @@
 package site.bitlab16;
 
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingDeque;
+
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
 import site.bitlab16.kafka_producer.Consumer;
 import site.bitlab16.model.SourceRecord;
 
-import javax.swing.*;
-import java.util.concurrent.*;
+public class App {
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        /*
-        SimulatedSource s1 = new Source1();
-        TimeInstant when = new TimeInstant(new GregorianCalendar(2020, Calendar.FEBRUARY, 26), 0);
-        TimeInstant end = new TimeInstant(new GregorianCalendar(2020, Calendar.MARCH, 1), 1);
+    enum ApplicationScope {
+        DEBUG, // Con grafici, assume server grafico
+        RELEASE // deployabile in un docker, no X11
+    }
+    
+    final public static ApplicationScope BUILD_MODE = ApplicationScope.RELEASE;
 
-        while ( ! when.equals(end) ) {
-
-
-            System.out.println(when + " " + s1.getValue(when));
-            when.advance();
+    
+    public static void main( String[] args ) {
+        
+        
+        switch (BUILD_MODE) {
+        
+            case RELEASE:
+                BlockingDeque<SourceRecord> outQueue = new LinkedBlockingDeque<>();
+                Simulator simulator = new Simulator(outQueue);
+                ExecutorService executor = Executors.newCachedThreadPool();
+                String kafkaBootstrapServers = "kafka-core:29092";
+                executor.execute(simulator);
+                executor.execute(new Consumer("Simulatore 1", kafkaBootstrapServers, outQueue));
+                break;
+            
+            case DEBUG:
+                SimulatorWithGraphs simulator_window = new SimulatorWithGraphs("---nome finestra---");
+                SwingUtilities.invokeLater(() -> {
+                    simulator_window.setSize(800, 400);
+                    simulator_window.setLocationRelativeTo(null);
+                    simulator_window.setVisible(true);
+                    simulator_window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                    simulator_window.run();
+                });
+                break;                
         }
 
-*/
-        BlockingDeque<SourceRecord> outQueue = new LinkedBlockingDeque<>();
-
-        ExecutorService executor = Executors.newCachedThreadPool();
-
-        String kafkaBootstrapServers = "kafka-core:29092";
-
-        SwingUtilities.invokeLater(() -> {
-            Simulator example = new Simulator("---nome finestra---", outQueue);
-            example.setSize(800, 400);
-            example.setLocationRelativeTo(null);
-            example.setVisible(true);
-            example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        });
-        Consumer consumer = new Consumer("Simulatore 1", kafkaBootstrapServers, outQueue);
-        executor.execute(consumer);
     }
 }
