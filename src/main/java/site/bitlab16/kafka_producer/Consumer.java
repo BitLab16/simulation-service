@@ -29,8 +29,7 @@ public class Consumer implements Runnable, AutoCloseable {
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         properties.put(ProducerConfig.CLIENT_ID_CONFIG, clientName);
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class.getName());
-        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaJsonSchemaSerializer.class.getName());
-        properties.put("schema.registry.url", "http://127.0.0.1:8081");
+        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class.getName());
 
         kafkaProducer = new KafkaProducer<Long, SourceRecord>(properties);
     }

@@ -8,9 +8,6 @@ public class SourceRecord {
     @JsonProperty
     private Long sourceCode;
 
-    @JsonIgnoreProperties
-    private TimeInstant time;
-
     @JsonProperty
     private String date;
 
@@ -22,7 +19,6 @@ public class SourceRecord {
 
     public SourceRecord(Long sourceCode, TimeInstant time, int peopleConcentration) {
         this.sourceCode = sourceCode;
-        this.time = time;
         this.peopleConcentration = peopleConcentration;
         this.date = time.getDay().getCalendarType();
         this.stringTime = time.getMinute().getMinute();
@@ -36,14 +32,6 @@ public class SourceRecord {
         this.sourceCode = sourceCode;
     }
 
-    public TimeInstant getTime() {
-        return time;
-    }
-
-    public void setTime(TimeInstant time) {
-        this.time = time;
-    }
-
     public int getPeopleConcentration() {
         return peopleConcentration;
     }
@@ -52,11 +40,26 @@ public class SourceRecord {
         this.peopleConcentration = peopleConcentration;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public int getStringTime() {
+        return stringTime;
+    }
+
+    public void setStringTime(int stringTime) {
+        this.stringTime = stringTime;
+    }
+
     @Override
     public String toString() {
         return "SourceRecord{" +
                 "sourceCode=" + sourceCode +
-                ", time=" + time +
                 ", peopleConcentration=" + peopleConcentration +
                 '}';
     }
