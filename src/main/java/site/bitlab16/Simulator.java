@@ -32,14 +32,15 @@ public class Simulator extends JFrame {
         SimulatedSource s1 = new Source1();
 
         TimeInstant when = new TimeInstant(new GregorianCalendar(2019, Calendar.JANUARY, 1), 0);
-        TimeInstant end = new TimeInstant(new GregorianCalendar(2019, Calendar.JANUARY, 2), 0);
 
         TimeSeries series = new TimeSeries("Series1", Minute.class);
         TimeSeries series2 = new TimeSeries("Series2", Minute.class);
 
+        int season = 0;
         try (FileWriter out = new FileWriter("data.csv") ) {
-            while ( ! when.equals(end) ) {
+            for (int i = 0; i<10000; i++) {
 
+                season = i/2500;
                 int num = s1.getValue(when);
                 Random random = new Random();
                 long offset = Math.round(random.nextGaussian()*3*((num+5)/65.));
@@ -52,7 +53,7 @@ public class Simulator extends JFrame {
                     
                 System.out.println("Sorgente1; " + when.getMinute() + "; " + num);
                 out.write("Sorgente1; " + when.getMinute() + "; " + num + "\n");
-                outQueue.add(new SourceRecord(1L, when, num, 0, false, 0.0F, 0.0F, 0.0F, 0.0F));
+                outQueue.add(new SourceRecord(1L, when, num, season, false, 0.0F, 0.0F, 0.0F, 0.0F));
                 
                 when.advance();
                 when.advance();

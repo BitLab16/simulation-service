@@ -28,7 +28,7 @@ public class SourceRecord {
             float seasonIndex,
             float attractionsIndex) {
         this.pointId = pointId;
-        this.time = new Timestamp(time.getDay().getTimeInMillis());
+        this.time = new Timestamp(time.getTimeInMillisecond());
         this.peopleConcentration = peopleConcentration;
         this.season = season;
         this.holiday = holiday;
