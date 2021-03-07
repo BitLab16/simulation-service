@@ -17,7 +17,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
 import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
 
 public class Simulator extends JFrame {
 
@@ -53,7 +52,7 @@ public class Simulator extends JFrame {
                     
                 System.out.println("Sorgente1; " + when.getMinute() + "; " + num);
                 out.write("Sorgente1; " + when.getMinute() + "; " + num + "\n");
-                outQueue.add(new SourceRecord(1L, when, num));
+                outQueue.add(new SourceRecord(1L, when, num, 0, false, 0.0F, 0.0F, 0.0F, 0.0F));
                 
                 when.advance();
                 when.advance();
