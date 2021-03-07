@@ -28,7 +28,7 @@ public class App {
         
             case RELEASE:
                 BlockingDeque<SourceRecord> outQueue = new LinkedBlockingDeque<>();
-                String kafkaBootstrapServers = "127.0.0.1:9091";
+                String kafkaBootstrapServers = "kafka1:19091";
                 Simulator simulator = new Simulator(outQueue);
                 Consumer consumer = new Consumer("Simulatore 1", kafkaBootstrapServers, outQueue);
                 ExecutorService executor = Executors.newCachedThreadPool();
