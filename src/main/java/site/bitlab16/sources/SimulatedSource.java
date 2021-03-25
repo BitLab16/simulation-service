@@ -8,7 +8,6 @@ import site.bitlab16.TimeInstant;
  * QUESTA CLASSE SI OCCUPA DI APPLICARE LE OPPORTUNE
  * MODIFICHE AI DATI FORNITI DALLE SOTTOCLASSI
  * QUESTE MODIFICHE SONO:
- *  -randomness alla 'montecarlo', modelli
  *  -stagioni, pioggia, eventi, ecc
  *  -randomness extra a ondine
  *  -ecc.
@@ -21,15 +20,13 @@ public abstract class SimulatedSource {
         random = new Random(1);
     }
 
-    final public int getValue(TimeInstant when) {
+    final public Integer getValue(TimeInstant when) {
         return getSourceSpecificExpectedValue(when);
     }
 
-    public abstract boolean shouldPublish(TimeInstant when);
-
     // create a pattern for specific source to deliver ideal perfect data
     // that does not consider randomness -> perfect reality simulation
-    protected abstract int getSourceSpecificExpectedValue(TimeInstant when);
+    protected abstract Integer getSourceSpecificExpectedValue(TimeInstant when);
 
     protected void applySourceSpecificRandomlyGeneratedFunctions() {
         // abstract

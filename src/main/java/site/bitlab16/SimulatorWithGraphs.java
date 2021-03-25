@@ -40,10 +40,9 @@ public class SimulatorWithGraphs extends JFrame implements Runnable {
 
         /// INIT VARS
         TimeInstant when = new TimeInstant(new GregorianCalendar(2019, Calendar.JANUARY, 1), 0);
-        TimeInstant end = new TimeInstant(new GregorianCalendar(2019, Calendar.JANUARY, 2), 0);
+        TimeInstant end = new TimeInstant(new GregorianCalendar(2019, Calendar.JANUARY, 20), 0);
         for (int i = 0; i < sources.length; i++) {
             series.add( new TimeSeries("Series" + (i+1) + "_1", Minute.class) );
-            series.add( new TimeSeries("Series" + (i+1) + "_2", Minute.class) );
         }
         Random random = new Random();
         
@@ -52,18 +51,17 @@ public class SimulatorWithGraphs extends JFrame implements Runnable {
 
             for (int i = 0; i < sources.length; i++) {
 
-                if (sources[i].shouldPublish(when)) {
+                Integer num = sources[i].getValue(when);
+                if (num != null) {
 
-                    int num = sources[i].getValue(when);
                     int offset = (int)Math.round(random.nextGaussian()*3*((num+5)/65.));
 
-                    series.get(i*2).add(when.getMinute(), Math.max(0, num));
-                    series.get(i*2+1).add(when.getMinute(), Math.max(0, num+offset));
-                    System.out.println("Sorgente" + (i+1) + "; " + when.getMinute() + "; " + num + "; " + (num+offset));
+                    series.get(i).add(when.getMinute(), Math.max(0, num));
                 }
 
-                when.advance();
             }
+            
+            when.advance();
         }
         
 

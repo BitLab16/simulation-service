@@ -36,8 +36,14 @@ public class TimeInstant {
     public String toString() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         int hour = instant/12;
+        String hh = hour + "";
+        if (hour < 10)
+            hh = "0" + hh;
         int min = (instant%12)*5;
-        return sdf.format(day.getTime()) + " " + hour + ":" + min;   
+        String mm = min + "";
+        if (min < 10)
+            mm = "0" + mm;
+        return sdf.format(day.getTime()) + " " + hh + ":" + mm;   
     }
 
     // QUESTO SERVE SOLO PER I GRAFICI!!

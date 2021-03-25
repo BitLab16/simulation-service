@@ -18,7 +18,7 @@ public class App {
         RELEASE // deployabile in un docker, no X11
     }
     
-    final public static ApplicationScope BUILD_MODE = ApplicationScope.RELEASE;
+    final public static ApplicationScope BUILD_MODE = ApplicationScope.DEBUG;
 
     
     public static void main( String[] args ) {
@@ -37,13 +37,13 @@ public class App {
                 break;
             
             case DEBUG:
-                SimulatorWithGraphs simulator_window = new SimulatorWithGraphs("---nome finestra---");
+                SimulatorWithGraphs simulatorWindow = new SimulatorWithGraphs("---nome finestra---");
                 SwingUtilities.invokeLater(() -> {
-                    simulator_window.setSize(800, 400);
-                    simulator_window.setLocationRelativeTo(null);
-                    simulator_window.setVisible(true);
-                    simulator_window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                    simulator_window.run();
+                    simulatorWindow.setSize(800, 400);
+                    simulatorWindow.setLocationRelativeTo(null);
+                    simulatorWindow.setVisible(true);
+                    simulatorWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                    simulatorWindow.run();
                 });
                 break;                
         }
