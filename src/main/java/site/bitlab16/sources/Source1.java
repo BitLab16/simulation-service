@@ -12,8 +12,6 @@ import site.bitlab16.TimeInstant;
 
 public class Source1 extends SimulatedSource {
 
-    static final int MAX = 60;
-
     // ogni mezzora
     private Map<String, Integer> data;
 
