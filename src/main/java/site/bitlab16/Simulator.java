@@ -30,15 +30,10 @@ public class Simulator implements Runnable {
             int season = 0;
             for (int j = 0; j<10000; j++) {
                 season = j/2500;
-                Integer num = sources[i].getValue(when);
-                if (num != null) {
+                int num = sources[i].getValue(when);
+                if (num != -1) {
                     outQueue.add(new SourceRecord(1L, when, num, season, false, 0.0F, 0.0F, 0.0F, 0.0F));
                 }
-                when.advance();
-                when.advance();
-                when.advance();
-                when.advance();
-                when.advance();
                 when.advance();
             }
         }

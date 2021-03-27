@@ -11,7 +11,8 @@ import javax.swing.JFrame;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.Minute;
 import org.jfree.data.time.TimeSeries;
@@ -40,7 +41,7 @@ public class SimulatorWithGraphs extends JFrame implements Runnable {
 
         /// INIT VARS
         TimeInstant when = new TimeInstant(new GregorianCalendar(2019, Calendar.JANUARY, 1), 0);
-        TimeInstant end = new TimeInstant(new GregorianCalendar(2019, Calendar.JANUARY, 20), 0);
+        TimeInstant end = new TimeInstant(new GregorianCalendar(2020, Calendar.OCTOBER, 15), 0);
         for (int i = 0; i < sources.length; i++) {
             series.add( new TimeSeries("Series" + (i+1) + "_1", Minute.class) );
         }
@@ -51,11 +52,8 @@ public class SimulatorWithGraphs extends JFrame implements Runnable {
 
             for (int i = 0; i < sources.length; i++) {
 
-                Integer num = sources[i].getValue(when);
-                if (num != null) {
-
-                    int offset = (int)Math.round(random.nextGaussian()*3*((num+5)/65.));
-
+                int num = sources[i].getValue(when);
+                if (num != -1) {
                     series.get(i).add(when.getMinute(), Math.max(0, num));
                 }
 
@@ -75,7 +73,7 @@ public class SimulatorWithGraphs extends JFrame implements Runnable {
     
         XYPlot plot = (XYPlot)chart.getPlot();
         plot.setBackgroundPaint(new Color(255,255, 127));
-        DateAxis y = new DateAxis();
+        ValueAxis y = new NumberAxis();
         y.setLowerBound(0);
         y.setUpperBound(60);
         plot.setRangeAxis(y);

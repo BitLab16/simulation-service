@@ -45,6 +45,9 @@ public class TimeInstant {
             mm = "0" + mm;
         return sdf.format(day.getTime()) + " " + hh + ":" + mm;   
     }
+    public String toStringAsInstant() {
+        return new SimpleDateFormat("yyyy-MM-dd").format(day.getTime()) + "/" + instant;    
+    }
 
     // QUESTO SERVE SOLO PER I GRAFICI!!
     // INFATTI USA 'Minute' DI JFREE
