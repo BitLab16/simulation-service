@@ -40,7 +40,7 @@ public class SimulatorWithGraphs extends JFrame implements Runnable {
     public void run() {
 
         /// INIT VARS
-        TimeInstant when = new TimeInstant(new GregorianCalendar(2018, Calendar.DECEMBER, 21), 0);
+        TimeInstant when = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 1), 0);
         TimeInstant end = new TimeInstant(new GregorianCalendar(2019, Calendar.JANUARY, 2), 0);
         for (int i = 0; i < sources.length; i++) {
             series.add( new TimeSeries("Series" + (i+1) + "_1", Minute.class) );

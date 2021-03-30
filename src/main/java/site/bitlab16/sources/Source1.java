@@ -1,25 +1,13 @@
 package site.bitlab16.sources;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Stream;
-
-import com.workday.insights.timeseries.arima.Arima;
-import com.workday.insights.timeseries.arima.struct.ArimaParams;
-import com.workday.insights.timeseries.arima.struct.ForecastResult;
-
-import site.bitlab16.TimeInstant;
+import java.util.Random;
 
 public class Source1 extends SimulatedSource {
 
     int oldFlow = 1;
     public Source1() {
+        random = new Random(1);
+
         WeeklyRawData weeks;
         try {
             weeks = WeeklyRawData.getInstance();
@@ -27,10 +15,10 @@ public class Source1 extends SimulatedSource {
             e.printStackTrace();
             return;
         }
-        int week1[] = weeks.get(0).getWeek();
         for(int i = 0; i < 52; i++) {
-            for (int j = 0; j < week1.length; j++)
-                data2018[i*288*7 + j] = week1[j];
+            int[] rand_week = weeks.get(random.nextInt(weeks.size())).getWeek();
+            for (int j = 0; j < rand_week.length; j++)
+                data2018[i*288*7 + j] = rand_week[j];
         }
 
         /*

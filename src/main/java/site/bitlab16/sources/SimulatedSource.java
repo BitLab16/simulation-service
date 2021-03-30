@@ -27,7 +27,6 @@ public abstract class SimulatedSource {
     protected int[] data2022;
 
     protected SimulatedSource() {
-        random = new Random(1);
         data2018 = new int[288*365];
         data2019 = new int[288*365];
         data2020 = new int[288*366]; // leap
