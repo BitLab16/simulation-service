@@ -69,14 +69,51 @@ public abstract class SimulatedSource {
     protected int[] data2021 = new int[288*365];
     protected int[] data2022 = new int[288*365];
     
+    private class DayIterator {
+        WeeklyRawData weeks;
+        int[] week;
+        int instant;
+        DayIterator() {
+            reset();
+        }
+        void reset() {
+            weeks = WeeklyRawData.getInstance();
+            int selectedWeek = random.nextInt(weeks.size());
+            week = weeks.get(selectedWeek).getWeek();
+            instant = 0;
+        }
+        int getAndAdvance() {
+            int flow = week[instant];
+            if (++instant == week.length)
+                reset();
+            return flow;
+        }
+
+    }
     SimulatedSource() {
         random = new Random(getSeed());
-        WeeklyRawData weeks = WeeklyRawData.getInstance();
-        for(int i = 0; i < 52; i++) {
-            int[] selectedWeek = weeks.get(random.nextInt(weeks.size())).getWeek();
-            for (int j = 0; j < selectedWeek.length; j++)
-                data2018[i*288*7 + j] = selectedWeek[j];
+        DayIterator iterator = new DayIterator();
+        //2018
+        for(int i = 0; i < 288*365; i++) {
+                data2018[i] = iterator.getAndAdvance();
         }
+        //2019
+        for(int i = 0; i < 288*365; i++) {
+                data2019[i] = iterator.getAndAdvance();
+        }
+        //2020
+        for(int i = 0; i < 288*366; i++) {
+                data2020[i] = iterator.getAndAdvance();
+        }
+        //2021
+        for(int i = 0; i < 288*365; i++) {
+                data2021[i] = iterator.getAndAdvance();
+        }
+        //2022
+        for(int i = 0; i < 288*365; i++) {
+                data2022[i] = iterator.getAndAdvance();
+        }
+
         feste();
     }
     
