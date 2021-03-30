@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Random;
 
 import javax.swing.JFrame;
 
@@ -31,9 +30,7 @@ public class SimulatorWithGraphs extends JFrame implements Runnable {
 
     public SimulatorWithGraphs(String title) {
         super(title);
-        try {
         sources = new SimulatedSource[] { Source1.getInstance() };
-        }catch(Exception e){e.printStackTrace();}
         series = new ArrayList<>();
     }
     
@@ -42,7 +39,7 @@ public class SimulatorWithGraphs extends JFrame implements Runnable {
 
         /// INIT VARS
         TimeInstant when = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 1), 0);
-        TimeInstant end = new TimeInstant(new GregorianCalendar(2023, Calendar.JANUARY, 10), 0);
+        TimeInstant end = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 10), 0);
         for (int i = 0; i < sources.length; i++) {
             series.add( new TimeSeries("Series" + (i+1) + "_1", Minute.class) );
         }
