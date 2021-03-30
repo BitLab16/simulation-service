@@ -14,7 +14,7 @@ import site.bitlab16.TimeInstant;
  *  -randomness extra a ondine
  *  -ecc.
  */
-public abstract class SimulatedSource { 
+public abstract class SimulatedSource {
 
     protected Random random;
     protected final static Calendar start = new GregorianCalendar(2018, Calendar.JANUARY, 1);
@@ -70,10 +70,6 @@ public abstract class SimulatedSource {
     }
 
     protected void applySourceIndependentHandWrittenFunctions() {
-        // non abstract
-    }
-
-    protected void applyMonteCarloRandomnessToDerivative() {
         // non abstract
     }
 
