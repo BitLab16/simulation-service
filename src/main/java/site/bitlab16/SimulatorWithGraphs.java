@@ -31,8 +31,9 @@ public class SimulatorWithGraphs extends JFrame implements Runnable {
 
     public SimulatorWithGraphs(String title) {
         super(title);
-
-        sources = new SimulatedSource[] { new Source1() };
+        try {
+        sources = new SimulatedSource[] { Source1.getInstance() };
+        }catch(Exception e){e.printStackTrace();}
         series = new ArrayList<>();
     }
     
@@ -41,11 +42,10 @@ public class SimulatorWithGraphs extends JFrame implements Runnable {
 
         /// INIT VARS
         TimeInstant when = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 1), 0);
-        TimeInstant end = new TimeInstant(new GregorianCalendar(2019, Calendar.JANUARY, 2), 0);
+        TimeInstant end = new TimeInstant(new GregorianCalendar(2023, Calendar.JANUARY, 10), 0);
         for (int i = 0; i < sources.length; i++) {
             series.add( new TimeSeries("Series" + (i+1) + "_1", Minute.class) );
         }
-        Random random = new Random();
         
         /// GET USEFUL DATA INTO VARS
         while ( ! when.equals(end) ) {

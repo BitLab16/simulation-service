@@ -1,59 +1,69 @@
 package site.bitlab16.sources;
 
-import java.util.Random;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class Source1 extends SimulatedSource {
 
-    int oldFlow = 1;
-    public Source1() {
-        random = new Random(1);
+    @Override
+    protected int getSeed() { return 1; }
 
-        WeeklyRawData weeks;
-        try {
-            weeks = WeeklyRawData.getInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-        for(int i = 0; i < 52; i++) {
-            int[] rand_week = weeks.get(random.nextInt(weeks.size())).getWeek();
-            for (int j = 0; j < rand_week.length; j++)
-                data2018[i*288*7 + j] = rand_week[j];
-        }
-
-        /*
-
-        //predico il futuro
-        int p = 7*3, d = 0, q = 7*3, P = 1, D = 1, Q = 0, m = p+q+1;
-        int forecastSize = 365;
-        ArimaParams params = new ArimaParams(p, d, q, P, D, Q, m);
-
-        int[][] input1819 = new int[288][365*2];
-        int[][] result20 = new int[288][366];
-        for (int i = 0; i < 288; i++) {
-            for (int j = 0; j < 365; j++) {
-                input1819[i][j] = data2018[j*288+i];
-                input1819[i][j+365] = data2019[j*288+i];
-            }
-        }
-
-        for (int i = 0; i < 288; i++) {
-            ForecastResult forecastResult = Arima.forecast_arima(
-                Arrays.stream(input1819[i]).asDoubleStream().toArray(),
-                forecastSize,
-                params);
-            result20[i] = Arrays.stream(forecastResult.getForecast())
-                .mapToInt(num -> (int)Math.round(num)).toArray();
-        }
+    private Source1() {
         
-        for (int i = 0; i < 288; i++) {
-            for (int j = 0; j < 365; j++) {
-                data2020[j*288+i] = result20[i][j];
-            }
-        }
-        */
 
     }
 
+    @Override
+    protected void feste() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar when = new GregorianCalendar(2018, Calendar.JANUARY, 1);
+        Calendar end = new GregorianCalendar(2023, Calendar.JANUARY, 1);
+        String date;
+        int year;
+        int instant;
+        int offset;
+        for (int i = 0; i < 288*(356*4+366); i++) {
+            date = dateFormat.format(when.getTime());
+            year = Integer.parseInt(date.split("-")[0]);
+            instant = i % 288;
+            offset = (when.get(Calendar.DAY_OF_YEAR)-1)*288 + instant;
+            float modifier = dataFestivita.get(date, instant);
+            switch (year) {
+                case 2018: data2018[offset] = festeEditValue(date, data2018[offset], instant, modifier); break;
+                case 2019: data2019[offset] = festeEditValue(date, data2019[offset], instant, modifier); break;
+                case 2020: data2020[offset] = festeEditValue(date, data2020[offset], instant, modifier); break;
+                case 2021: data2021[offset] = festeEditValue(date, data2021[offset], instant, modifier); break;
+                case 2022: data2022[offset] = festeEditValue(date, data2022[offset], instant, modifier); break;
+                default: break;
+            }
+
+            if (instant==277)
+                when.add(Calendar.DATE, 1);
+        }
+
+    }
+
+    private int festeEditValue(String date, int val, int instant, float modifier) {
+
+        if (modifier == 0)
+            return val;
+        
+        int dayOfWeek;
+        if (date.hashCode() % 2 == 0)
+            dayOfWeek = Calendar.SATURDAY;
+        else
+            dayOfWeek = Calendar.SUNDAY;
+        
+        int week = Math.abs( date.hashCode() % WeeklyRawData.getInstance().size() );
+        return WeeklyRawData.getInstance().get(week).getDayOfWeek(dayOfWeek)[instant];
+    }
+
+    private static SimulatedSource instance;
+    public static SimulatedSource getInstance() {
+        if (instance == null)
+            instance = new Source1();
+        return instance;
+    }
 
 }

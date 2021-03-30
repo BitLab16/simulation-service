@@ -1,7 +1,7 @@
 package site.bitlab16.sources;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +13,7 @@ public class WeeklyRawData {
     private static WeeklyRawData instance = null;
     private final Random random = new Random(10203040);
 
-    public static WeeklyRawData getInstance() throws Exception {
+    public static WeeklyRawData getInstance() {
         if (instance == null)
             instance = new WeeklyRawData();
         return instance;
@@ -25,8 +25,6 @@ public class WeeklyRawData {
         private int weekData[];
 
         Week(int a[]) {
-            if (a.length != 288*7)
-                throw new IllegalArgumentException("Invalid week of " + a.length + " instants, must be " + 288*7);
             weekData = a;
         }
 
@@ -40,14 +38,12 @@ public class WeeklyRawData {
 
     private ArrayList<Week> data = new ArrayList<>();
     
-    private WeeklyRawData() throws Exception {
+    private WeeklyRawData() {
         int i;
         for (int filenum = 1; filenum < 101; filenum++) {
             int weekData[] = new int[288*7];
             try ( Stream<String> lineStream =  Files.lines(new File("data/week" + filenum + ".csv").toPath()) ) {
                 String[] lines = lineStream.toArray(String[]::new);
-                if (lines.length != 24*7)
-                    throw new Exception("Data file invalid length: week" + filenum);
                 for(i = 0; i < lines.length; i++) {
                     int flow = getFlow(lines, i);
                     int flowNext =  getFlow(lines, i+1);
@@ -59,7 +55,7 @@ public class WeeklyRawData {
                     for (int j = 1; j < 12; j++)
                         weekData[i*12 + j] = Math.round(flow+slope*j) + (random.nextInt() % modulo);
                 }
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
