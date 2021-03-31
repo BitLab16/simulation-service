@@ -152,7 +152,42 @@ public abstract class SimulatedSource {
                     return -1;
             }
     }
-    
+    public float getModifierMeteo(TimeInstant when) {
+        int offset = 0;
+        int year = when.getDay().get(Calendar.YEAR);
+        switch (year) {
+            case 2022: offset += 288*365; //add 2021
+            case 2011: offset += 288*366; //add 2020
+            case 2020: offset += 288*365; //add 2019
+            case 2019: offset += 288*365; //add 2018
+            default: break;
+        }
+        offset += (when.getDay().get(Calendar.DAY_OF_YEAR)-1)*288;
+        offset += when.getInstant();
+        return getModifierMeteo(offset);
+    }
+    private float getModifierMeteo(int offset) {
+        float modifierMeteo = 0f;
+        int x0 = Math.max(offset-50, 0);
+        int x1 = Math.min(offset+50, len_18_19_20_21_22);
+        float cumulative = 0f;
+        for (int j = x0; j < x1; j++)
+            cumulative += dataMeteo[j];
+        modifierMeteo += cumulative/(x1-x0);
+        x0 = Math.max(offset-100, 0);
+        x1 = Math.min(offset-50, len_18_19_20_21_22);
+        cumulative = 0f;
+        for (int j = x0; j < x1; j++)
+            cumulative += dataMeteo[j];
+        modifierMeteo += cumulative/(x1-x0)/2;
+        x0 = Math.max(offset+50, 0);
+        x1 = Math.min(offset+100, len_18_19_20_21_22);
+        cumulative = 0f;
+        for (int j = x0; j < x1; j++)
+            cumulative += dataMeteo[j];
+        modifierMeteo += cumulative/(x1-x0)/2;
+        return modifierMeteo;
+    }
     private void applyModifiers() {
         Calendar when = (Calendar)start.clone();
         String date;
@@ -165,28 +200,7 @@ public abstract class SimulatedSource {
             instant = i % 288;
             offset = (when.get(Calendar.DAY_OF_YEAR)-1)*288 + instant;
             float modifierFeste = dataFestivita.get(date, instant);
-
-            float modifierMeteo = 0; {
-                int x0 = Math.max(i-50, 0);
-                int x1 = Math.min(i+50, len_18_19_20_21_22);
-                float cumulative = 0f;
-                for (int j = x0; j < x1; j++)
-                    cumulative += dataMeteo[j];
-                modifierMeteo += cumulative/(x1-x0);
-                x0 = Math.max(i-100, 0);
-                x1 = Math.min(i-50, len_18_19_20_21_22);
-                cumulative = 0f;
-                for (int j = x0; j < x1; j++)
-                    cumulative += dataMeteo[j];
-                modifierMeteo += cumulative/(x1-x0)/2;
-                x0 = Math.max(i+50, 0);
-                x1 = Math.min(i+100, len_18_19_20_21_22);
-                cumulative = 0f;
-                for (int j = x0; j < x1; j++)
-                    cumulative += dataMeteo[j];
-                modifierMeteo += cumulative/(x1-x0)/2;
-            }
-            
+            float modifierMeteo = getModifierMeteo(i);
             switch (year) {
                 case 2018:
                     data2018[offset] = festeEditValue(date, data2018[offset], instant, modifierFeste);
