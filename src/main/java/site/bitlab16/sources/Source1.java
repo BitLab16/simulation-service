@@ -43,5 +43,13 @@ public class Source1 extends SimulatedSource {
         return Math.round(val / (modifier*100+1)) + val/3;
     }
 
+    //imposto l'effetto delle stagioni
+    @Override
+    protected int seasonEditValue(int dayOfYear, int val, int instant) {
+        int shifted = Math.abs(dayOfYear-183);
+        double seasonMultiplier = 1 + 0.3 * (Math.cos(shifted*Math.PI/183*2)/2 - Math.abs(shifted)/400d);
+        return (int)Math.round(seasonMultiplier*val);
+    }
+
 
 }

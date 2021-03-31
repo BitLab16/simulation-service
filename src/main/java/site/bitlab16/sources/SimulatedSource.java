@@ -205,22 +205,27 @@ public abstract class SimulatedSource {
                 case 2018:
                     data2018[offset] = festeEditValue(date, data2018[offset], instant, modifierFeste);
                     data2018[offset] = meteoEditValue(date, data2018[offset], instant, modifierMeteo);
+                    data2018[offset] = seasonEditValue(when.get(Calendar.DAY_OF_YEAR), data2018[offset], instant);
                     break;
                 case 2019:
                     data2019[offset] = festeEditValue(date, data2019[offset], instant, modifierFeste);
                     data2019[offset] = meteoEditValue(date, data2019[offset], instant, modifierMeteo);
+                    data2019[offset] = seasonEditValue(when.get(Calendar.DAY_OF_YEAR), data2019[offset], instant);
                     break;
                 case 2020:
                     data2020[offset] = festeEditValue(date, data2020[offset], instant, modifierFeste);
                     data2020[offset] = meteoEditValue(date, data2020[offset], instant, modifierMeteo);
+                    data2020[offset] = seasonEditValue(when.get(Calendar.DAY_OF_YEAR), data2020[offset], instant);
                     break;
                 case 2021:
                     data2021[offset] = festeEditValue(date, data2021[offset], instant, modifierFeste);
                     data2021[offset] = meteoEditValue(date, data2021[offset], instant, modifierMeteo);
+                    data2021[offset] = seasonEditValue(when.get(Calendar.DAY_OF_YEAR), data2021[offset], instant);
                     break;
                 case 2022: 
                     data2022[offset] = festeEditValue(date, data2022[offset], instant, modifierFeste);
                     data2022[offset] = meteoEditValue(date, data2022[offset], instant, modifierMeteo);
+                    data2022[offset] = seasonEditValue(when.get(Calendar.DAY_OF_YEAR), data2022[offset], instant);
                     break;
                 default: break;
             }
@@ -234,6 +239,8 @@ public abstract class SimulatedSource {
     protected abstract int festeEditValue(String date, int val, int instant, float modifier);
     /*stabilisce l'effetto del meteo*/
     protected abstract int meteoEditValue(String date, int val, int instant, float modifier);
+    /*stabilisce l'effetto delle stagioni*/
+    protected int seasonEditValue(int dayOfYear, int val, int instant);
 
     private static int eventi(TimeInstant when, int flow) {
         return flow;
