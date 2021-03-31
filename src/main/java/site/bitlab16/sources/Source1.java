@@ -4,9 +4,21 @@ import java.util.Calendar;
 
 public class Source1 extends SimulatedSource {
 
+    /* CREATION */
+
+    private static SimulatedSource instance;
+    public static SimulatedSource getInstance() {
+        if (instance == null)
+            instance = new Source1();
+        return instance;
+    }
+
+
+
+    /* METHODS */
+
     @Override
     protected int getSeed() { return 2; }
-
 
     // sostituisco i giorni di festa con le domeniche
     @Override
@@ -25,11 +37,11 @@ public class Source1 extends SimulatedSource {
         return WeeklyRawData.getInstance().get(week).getDayOfWeek(dayOfWeek)[instant];
     }
 
-    private static SimulatedSource instance;
-    public static SimulatedSource getInstance() {
-        if (instance == null)
-            instance = new Source1();
-        return instance;
+    // imposto l' effetto della pioggia
+    @Override
+    protected int meteoEditValue(String date, int val, int instant, float modifier) {
+        return Math.round(val * (1-modifier));
     }
+
 
 }

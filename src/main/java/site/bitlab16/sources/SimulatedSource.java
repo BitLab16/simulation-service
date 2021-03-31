@@ -26,6 +26,7 @@ public abstract class SimulatedSource {
 
     protected static final Calendar start;
     protected static final Calendar end;
+    private static final SimpleDateFormat dateFormat;
 
     // tabelle statiche festività, meteo, ...
     protected static float[] dataMeteo;
@@ -35,6 +36,7 @@ public abstract class SimulatedSource {
     static {
         start = new GregorianCalendar(2018, Calendar.JANUARY, 1);
         end = new GregorianCalendar(2022, Calendar.DECEMBER, 31);
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         final int len_18_19_20_21_22 = 288*365 + 288*365 + 288*366 + 288*365 + 288*365;
         dataMeteo = new float[len_18_19_20_21_22];
@@ -70,11 +72,11 @@ public abstract class SimulatedSource {
     protected int[] data2021 = new int[288*365];
     protected int[] data2022 = new int[288*365];
     
-    private class DayIterator {
+    private class WeekDayIterator { // TODO: move to WeeklyRawData.java?
         WeeklyRawData weeks;
         int[] week;
         int instant;
-        DayIterator() {
+        WeekDayIterator() {
             reset();
         }
         void reset() {
@@ -93,7 +95,7 @@ public abstract class SimulatedSource {
     }
     SimulatedSource() {
         random = new Random(getSeed());
-        DayIterator iterator = new DayIterator();
+        WeekDayIterator iterator = new WeekDayIterator();
         //2018
         for(int i = 0; i < 288*365; i++) {
                 data2018[i] = iterator.getAndAdvance();
@@ -115,7 +117,7 @@ public abstract class SimulatedSource {
                 data2022[i] = iterator.getAndAdvance();
         }
 
-        feste();
+        applyModifiers();
     }
     
     protected abstract int getSeed();
@@ -127,7 +129,6 @@ public abstract class SimulatedSource {
         i =  getSourceSpecificExpectedValue(when);
         i = eventi(when, i);
         i = attivita(when, i);
-        i = meteo(when, i);
         i = stagione(when, i);
         return i;
     }
@@ -152,9 +153,8 @@ public abstract class SimulatedSource {
             }
     }
     
-    protected void feste() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar when = new GregorianCalendar(2018, Calendar.JANUARY, 1);
+    private void applyModifiers() {
+        Calendar when = (Calendar)start.clone();
         String date;
         int year;
         int instant;
@@ -164,35 +164,47 @@ public abstract class SimulatedSource {
             year = Integer.parseInt(date.split("-")[0]);
             instant = i % 288;
             offset = (when.get(Calendar.DAY_OF_YEAR)-1)*288 + instant;
-            float modifier = dataFestivita.get(date, instant);
+            float modifierFeste = dataFestivita.get(date, instant);
+            float modifierMeteo = dataMeteo[offset];
             switch (year) {
-                case 2018: data2018[offset] = festeEditValue(date, data2018[offset], instant, modifier); break;
-                case 2019: data2019[offset] = festeEditValue(date, data2019[offset], instant, modifier); break;
-                case 2020: data2020[offset] = festeEditValue(date, data2020[offset], instant, modifier); break;
-                case 2021: data2021[offset] = festeEditValue(date, data2021[offset], instant, modifier); break;
-                case 2022: data2022[offset] = festeEditValue(date, data2022[offset], instant, modifier); break;
+                case 2018:
+                    data2018[offset] = festeEditValue(date, data2018[offset], instant, modifierFeste);
+                    data2018[offset] = meteoEditValue(date, data2018[offset], instant, modifierMeteo);
+                    break;
+                case 2019:
+                    data2019[offset] = festeEditValue(date, data2019[offset], instant, modifierFeste);
+                    data2019[offset] = meteoEditValue(date, data2019[offset], instant, modifierMeteo);
+                    break;
+                case 2020:
+                    data2020[offset] = festeEditValue(date, data2020[offset], instant, modifierFeste);
+                    data2020[offset] = meteoEditValue(date, data2020[offset], instant, modifierMeteo);
+                    break;
+                case 2021:
+                    data2021[offset] = festeEditValue(date, data2021[offset], instant, modifierFeste);
+                    data2021[offset] = meteoEditValue(date, data2021[offset], instant, modifierMeteo);
+                    break;
+                case 2022: 
+                    data2022[offset] = festeEditValue(date, data2022[offset], instant, modifierFeste);
+                    data2022[offset] = meteoEditValue(date, data2022[offset], instant, modifierMeteo);
+                    break;
                 default: break;
             }
 
             if (instant==277)
                 when.add(Calendar.DATE, 1);
         }
-
     
     }
+    /*sostituisce i giorni di festa con altri profili, CHIAMARE PER PRIMA*/
     protected abstract int festeEditValue(String date, int val, int instant, float modifier);
+    /*stabilisce l'effetto del meteo*/
+    protected abstract int meteoEditValue(String date, int val, int instant, float modifier);
 
     private static int eventi(TimeInstant when, int flow) {
         return flow;
     }
     private static int attivita(TimeInstant when, int flow) {
         return flow;
-    }
-    private static int meteo(TimeInstant when, int flow) {
-        //int year = when.getDay() {}
-        int i = dataMeteo[(when.getDay().get(Calendar.DAY_OF_YEAR)-1)*288 + when.getInstant()] == 0 ? 
-            1 : -2;
-        return Math.round(flow*i);
     }
     private static int stagione(TimeInstant when, int i) {
         return i;
