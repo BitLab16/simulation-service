@@ -20,7 +20,7 @@ public class Source1 extends SimulatedSource {
     @Override
     protected int getSeed() { return 2; }
 
-    // sostituisco i giorni di festa con le domeniche
+    // sostituisco i giorni di festa con sabati e domeniche
     @Override
     protected int festeEditValue(String date, int val, int instant, float modifier) {
 
@@ -40,7 +40,7 @@ public class Source1 extends SimulatedSource {
     // imposto l' effetto della pioggia
     @Override
     protected int meteoEditValue(String date, int val, int instant, float modifier) {
-        return Math.round(val * (1-modifier));
+        return Math.round(val / (modifier*100+1)) + val/3;
     }
 
 

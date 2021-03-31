@@ -26,6 +26,7 @@ public abstract class SimulatedSource {
 
     protected static final Calendar start;
     protected static final Calendar end;
+    static final int len_18_19_20_21_22 = 288*365 + 288*365 + 288*366 + 288*365 + 288*365;
     private static final SimpleDateFormat dateFormat;
 
     // tabelle statiche festività, meteo, ...
@@ -38,7 +39,6 @@ public abstract class SimulatedSource {
         end = new GregorianCalendar(2022, Calendar.DECEMBER, 31);
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        final int len_18_19_20_21_22 = 288*365 + 288*365 + 288*366 + 288*365 + 288*365;
         dataMeteo = new float[len_18_19_20_21_22];
         dataFestivita = new ConcentrationModifier();
         try (
@@ -159,13 +159,34 @@ public abstract class SimulatedSource {
         int year;
         int instant;
         int offset;
-        for (int i = 0; i < 288*(356*4+366); i++) {
+        for (int i = 0; i < len_18_19_20_21_22; i++) {
             date = dateFormat.format(when.getTime());
             year = Integer.parseInt(date.split("-")[0]);
             instant = i % 288;
             offset = (when.get(Calendar.DAY_OF_YEAR)-1)*288 + instant;
             float modifierFeste = dataFestivita.get(date, instant);
-            float modifierMeteo = dataMeteo[offset];
+
+            float modifierMeteo = 0; {
+                int x0 = Math.max(i-50, 0);
+                int x1 = Math.min(i+50, len_18_19_20_21_22);
+                float cumulative = 0f;
+                for (int j = x0; j < x1; j++)
+                    cumulative += dataMeteo[j];
+                modifierMeteo += cumulative/(x1-x0);
+                x0 = Math.max(i-100, 0);
+                x1 = Math.min(i-50, len_18_19_20_21_22);
+                cumulative = 0f;
+                for (int j = x0; j < x1; j++)
+                    cumulative += dataMeteo[j];
+                modifierMeteo += cumulative/(x1-x0)/2;
+                x0 = Math.max(i+50, 0);
+                x1 = Math.min(i+100, len_18_19_20_21_22);
+                cumulative = 0f;
+                for (int j = x0; j < x1; j++)
+                    cumulative += dataMeteo[j];
+                modifierMeteo += cumulative/(x1-x0)/2;
+            }
+            
             switch (year) {
                 case 2018:
                     data2018[offset] = festeEditValue(date, data2018[offset], instant, modifierFeste);
@@ -190,7 +211,7 @@ public abstract class SimulatedSource {
                 default: break;
             }
 
-            if (instant==277)
+            if (instant==287)
                 when.add(Calendar.DATE, 1);
         }
     
