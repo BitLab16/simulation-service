@@ -18,7 +18,7 @@ public class Source1 extends SimulatedSource {
     /* METHODS */
 
     @Override
-    protected int getSeed() { return 1; }
+    public int getSeed() { return 1; }
 
     // sostituisco i giorni di festa con sabati e domeniche
     @Override

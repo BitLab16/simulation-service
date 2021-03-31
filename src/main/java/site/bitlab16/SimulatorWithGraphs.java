@@ -1,6 +1,8 @@
 package site.bitlab16;
 
 import java.awt.Color;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -22,7 +24,7 @@ import site.bitlab16.sources.Source1;
 
 public class SimulatorWithGraphs extends JFrame implements Runnable {
 
-    final static long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
     
     private SimulatedSource sources[];
 
@@ -39,24 +41,59 @@ public class SimulatorWithGraphs extends JFrame implements Runnable {
 
         /// INIT VARS
         TimeInstant when = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 1), 0);
-        TimeInstant end = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 20), 0);
+        TimeInstant end = new TimeInstant(new GregorianCalendar(2023, Calendar.JANUARY, 1), 0);
         for (int i = 0; i < sources.length; i++) {
             series.add( new TimeSeries("Series" + (i+1) + "_1", Minute.class) );
         }
         
+        ArrayList<String> outfile = new ArrayList<>();
+        outfile.add("ID,timestamp,stagione,meteo,eventi,attivita,festivita," +
+            "indicemeteo,indiceattivita,indiceeventi,indiceoragiorno,flow");
+    
+
         /// GET USEFUL DATA INTO VARS
         while ( ! when.equals(end) ) {
 
             for (int i = 0; i < sources.length; i++) {
 
-                int num = sources[i].getValue(when);
-                if (num != -1) {
-                    series.get(i).add(when.getMinute(), Math.max(0, num));
+                int flow = sources[i].getValue(when);
+                if (flow != -1) {
+                    series.get(i).add(when.getMinute(), flow);
                 }
-
+                
+                // csv
+                String line = sources[i].getSeed() + ",";
+                line += when.toString() + ',';
+                final int[] seasons = new int[]{0,0,0,1,1,1,2,2,2,3,3,3};
+                line += seasons[when.getDay().get(Calendar.MONTH)] + ",";
+                float dataMeteo = sources[i].getModifierMeteo(when);
+                int meteoAsEnum;
+                if (dataMeteo < 0.05) meteoAsEnum = 0;
+                else if(dataMeteo < 0.13) meteoAsEnum = 1;
+                else if(dataMeteo < 0.2) meteoAsEnum = 2;
+                else if(dataMeteo < 0.3) meteoAsEnum = 3;
+                else if(dataMeteo < 0.5) meteoAsEnum = 4;
+                else meteoAsEnum = 5;
+                line += meteoAsEnum + ",";
+                line += (sources[i].getEventi(when)==0 ? 0 : 1) + ",";
+                line += (sources[i].getAttivita(when)==0 ? 0 : 1) + ",";
+                line += (sources[i].getFestivita(when)==0 ? 0 : 1) + ",";
+                line += 3 + ",";
+                line += 3 + ",";
+                line += 4 + ",";
+                line += 2 + ",";
+                line += flow;
+                outfile.add(line);
             }
             
             when.advance();
+        }
+
+        try (FileWriter writer = new FileWriter("data.csv") ) {
+            for(String line: outfile)
+                writer.write(line + System.lineSeparator());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         
 

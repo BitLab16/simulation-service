@@ -124,11 +124,11 @@ public abstract class SimulatedSource {
         ) {
             eventiStream.forEach( line -> {
                 String[] s = line.split(",");
-                dataEventi.add(s[0], Integer.parseInt(s[1]), 12*Integer.parseInt(s[2]), Integer.parseInt(s[3]));
+                dataEventi.add(s[0], 12*Integer.parseInt(s[1]), 12*Integer.parseInt(s[2]), Integer.parseInt(s[3]));
             });
             attivitaStream.forEach( line -> {
                 String[] s = line.split(",");
-                dataAttivita.add(s[0], Integer.parseInt(s[1]), 12*Integer.parseInt(s[2]), Integer.parseInt(s[3]));
+                dataAttivita.add(s[0], 12*Integer.parseInt(s[1]), 12*Integer.parseInt(s[2]), Integer.parseInt(s[3]));
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -137,7 +137,7 @@ public abstract class SimulatedSource {
         applyModifiers();
     }
     
-    protected abstract int getSeed();
+    public abstract int getSeed();
 
     public final int getValue(TimeInstant when) {
         if (when.getDay().compareTo(start) < 0 || when.getDay().compareTo(end) > 0)
@@ -168,12 +168,21 @@ public abstract class SimulatedSource {
                     return -1;
             }
     }
+    public float getEventi(TimeInstant when) {
+        return dataEventi.get(dateFormat.format(when.getDay().getTime()), when.getInstant());
+    }
+    public float getAttivita(TimeInstant when) {
+        return dataAttivita.get(dateFormat.format(when.getDay().getTime()), when.getInstant());
+    }
+    public float getFestivita(TimeInstant when) {
+        return dataFestivita.get(dateFormat.format(when.getDay().getTime()), when.getInstant());
+    }
     public float getModifierMeteo(TimeInstant when) {
         int offset = 0;
         int year = when.getDay().get(Calendar.YEAR);
         switch (year) {
             case 2022: offset += 288*365; //add 2021
-            case 2011: offset += 288*366; //add 2020
+            case 2021: offset += 288*366; //add 2020
             case 2020: offset += 288*365; //add 2019
             case 2019: offset += 288*365; //add 2018
             default: break;
