@@ -42,7 +42,7 @@ public class WeeklyRawData {
         int i;
         for (int filenum = 1; filenum < 101; filenum++) {
             int weekData[] = new int[288*7];
-            try ( Stream<String> lineStream =  Files.lines(new File("data/week" + filenum + ".csv").toPath()) ) {
+            try ( Stream<String> lineStream =  Files.lines(new File("data/weeks/week" + filenum + ".csv").toPath()) ) {
                 String[] lines = lineStream.toArray(String[]::new);
                 for(i = 0; i < lines.length; i++) {
                     int flow = getFlow(lines, i);

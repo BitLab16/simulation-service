@@ -31,9 +31,9 @@ public abstract class SimulatedSource {
 
     // tabelle statiche festività, meteo, ...
     protected static float[] dataMeteo;
-    protected static ConcentrationModifier dataAttivita; // NON STATICO! DIPENDE DALLA SORGENTE!
     protected static ConcentrationModifier dataFestivita;
-    protected static ConcentrationModifier dataEventi; // NON STATICO! DIPENDE DALLA SORGENTE!
+    protected ConcentrationModifier dataAttivita; // NON STATICO! DIPENDE DALLA SORGENTE!
+    protected ConcentrationModifier dataEventi; // NON STATICO! DIPENDE DALLA SORGENTE!
     static {
         start = new GregorianCalendar(2018, Calendar.JANUARY, 1);
         end = new GregorianCalendar(2022, Calendar.DECEMBER, 31);
@@ -44,7 +44,6 @@ public abstract class SimulatedSource {
         try (
             Stream<String> festivitaStream = Files.lines(new File("data/festivita.csv").toPath());
             Stream<String> meteoStream = Files.lines(new File("data/meteo.csv").toPath());
-            
         ) {
             festivitaStream.forEach( (day) -> {
                 dataFestivita.add(day, 0, 287, 1);
@@ -116,6 +115,24 @@ public abstract class SimulatedSource {
         for(int i = 0; i < 288*365; i++) {
                 data2022[i] = iterator.getAndAdvance();
         }
+        
+        dataEventi = new ConcentrationModifier();
+        dataAttivita = new ConcentrationModifier();
+        try (
+            Stream<String> eventiStream = Files.lines(new File("data/eventi_source" + getSeed() + ".csv").toPath() );
+            Stream<String> attivitaStream = Files.lines(new File("data/attivita_source" + getSeed() + ".csv").toPath() );
+        ) {
+            eventiStream.forEach( line -> {
+                String[] s = line.split(",");
+                dataEventi.add(s[0], Integer.parseInt(s[1]), 12*Integer.parseInt(s[2]), Integer.parseInt(s[3]));
+            });
+            attivitaStream.forEach( line -> {
+                String[] s = line.split(",");
+                dataAttivita.add(s[0], Integer.parseInt(s[1]), 12*Integer.parseInt(s[2]), Integer.parseInt(s[3]));
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         applyModifiers();
     }
@@ -127,7 +144,6 @@ public abstract class SimulatedSource {
             return -1;
         int i;
         i =  getSourceSpecificExpectedValue(when);
-        i = eventi(when, i);
         i = attivita(when, i);
         i = stagione(when, i);
         return i;
@@ -201,31 +217,49 @@ public abstract class SimulatedSource {
             offset = (when.get(Calendar.DAY_OF_YEAR)-1)*288 + instant;
             float modifierFeste = dataFestivita.get(date, instant);
             float modifierMeteo = getModifierMeteo(i);
+            float modifierEventi = 0;
+            for (int k = -8; k < 12; k++)
+                modifierEventi += dataEventi.get(date, instant+k);
+            modifierEventi /= 20;
+            float modifierAttivita = 0;
+            for (int k = -8; k < 8; k++)
+                modifierAttivita += dataAttivita.get(date, instant+k);
+            modifierAttivita /= 16;
             switch (year) {
                 case 2018:
                     data2018[offset] = festeEditValue(date, data2018[offset], instant, modifierFeste);
                     data2018[offset] = meteoEditValue(date, data2018[offset], instant, modifierMeteo);
                     data2018[offset] = seasonEditValue(when.get(Calendar.DAY_OF_YEAR), data2018[offset], instant);
+                    data2018[offset] = eventiEditValue(data2018[offset], modifierEventi);
+                    data2018[offset] = attivitaEditValue(data2018[offset], modifierAttivita);
                     break;
                 case 2019:
                     data2019[offset] = festeEditValue(date, data2019[offset], instant, modifierFeste);
                     data2019[offset] = meteoEditValue(date, data2019[offset], instant, modifierMeteo);
                     data2019[offset] = seasonEditValue(when.get(Calendar.DAY_OF_YEAR), data2019[offset], instant);
+                    data2019[offset] = eventiEditValue(data2019[offset], modifierEventi);
+                    data2019[offset] = attivitaEditValue(data2019[offset], modifierAttivita);
                     break;
                 case 2020:
                     data2020[offset] = festeEditValue(date, data2020[offset], instant, modifierFeste);
                     data2020[offset] = meteoEditValue(date, data2020[offset], instant, modifierMeteo);
                     data2020[offset] = seasonEditValue(when.get(Calendar.DAY_OF_YEAR), data2020[offset], instant);
+                    data2020[offset] = eventiEditValue(data2020[offset], modifierEventi);
+                    data2020[offset] = attivitaEditValue(data2020[offset], modifierAttivita);
                     break;
                 case 2021:
                     data2021[offset] = festeEditValue(date, data2021[offset], instant, modifierFeste);
                     data2021[offset] = meteoEditValue(date, data2021[offset], instant, modifierMeteo);
                     data2021[offset] = seasonEditValue(when.get(Calendar.DAY_OF_YEAR), data2021[offset], instant);
+                    data2021[offset] = eventiEditValue(data2021[offset], modifierEventi);
+                    data2021[offset] = attivitaEditValue(data2021[offset], modifierAttivita);
                     break;
                 case 2022: 
                     data2022[offset] = festeEditValue(date, data2022[offset], instant, modifierFeste);
                     data2022[offset] = meteoEditValue(date, data2022[offset], instant, modifierMeteo);
                     data2022[offset] = seasonEditValue(when.get(Calendar.DAY_OF_YEAR), data2022[offset], instant);
+                    data2022[offset] = eventiEditValue(data2022[offset], modifierEventi);
+                    data2022[offset] = attivitaEditValue(data2022[offset], modifierAttivita);
                     break;
                 default: break;
             }
@@ -240,11 +274,12 @@ public abstract class SimulatedSource {
     /*stabilisce l'effetto del meteo*/
     protected abstract int meteoEditValue(String date, int val, int instant, float modifier);
     /*stabilisce l'effetto delle stagioni*/
-    protected int seasonEditValue(int dayOfYear, int val, int instant);
+    protected abstract int seasonEditValue(int dayOfYear, int val, int instant);
+    /*stabilisce l'effetto degli eventi*/
+    protected abstract int eventiEditValue(int val, float modifier);
+    /*stabilisce l'effetto delle attivita*/
+    protected abstract int attivitaEditValue(int val, float modifier);
 
-    private static int eventi(TimeInstant when, int flow) {
-        return flow;
-    }
     private static int attivita(TimeInstant when, int flow) {
         return flow;
     }

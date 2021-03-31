@@ -18,7 +18,7 @@ public class Source1 extends SimulatedSource {
     /* METHODS */
 
     @Override
-    protected int getSeed() { return 2; }
+    protected int getSeed() { return 1; }
 
     // sostituisco i giorni di festa con sabati e domeniche
     @Override
@@ -49,6 +49,18 @@ public class Source1 extends SimulatedSource {
         int shifted = Math.abs(dayOfYear-183);
         double seasonMultiplier = 1 + 0.3 * (Math.cos(shifted*Math.PI/183*2)/2 - Math.abs(shifted)/400d);
         return (int)Math.round(seasonMultiplier*val);
+    }
+
+    //imposto l'effetto delle stagioni
+    @Override
+    protected int eventiEditValue(int val, float modifier) {
+        return Math.round((modifier+3)*val/3);
+    }
+
+    //imposto l'effetto delle attività
+    @Override
+    protected int attivitaEditValue(int val, float modifier) {
+        return Math.round((modifier+4)*val/4);
     }
 
 
