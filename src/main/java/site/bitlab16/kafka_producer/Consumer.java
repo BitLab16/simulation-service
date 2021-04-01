@@ -42,8 +42,13 @@ public class Consumer implements Runnable, AutoCloseable {
             while(true) {
                 long timestamp = System.currentTimeMillis();
                 SourceRecord sourceRecord = queue.take();
-                ProducerRecord<Long, SourceRecord> kafkaRecord = new ProducerRecord<>(TOPIC, timestamp, sourceRecord);
-                kafkaProducer.send(kafkaRecord);
+                if(sourceRecord.getTime().toInstant().toEpochMilli() < timestamp) {
+                    ProducerRecord<Long, SourceRecord> kafkaRecord = new ProducerRecord<>(TOPIC, timestamp, sourceRecord);
+                    kafkaProducer.send(kafkaRecord);
+                } else {
+
+                    Thread.sleep(300000);
+                }
             }
         } catch (InterruptedException ex) {
             System.out.println("Consumer interrotto");

@@ -10,6 +10,7 @@ public class SourceRecord {
     @JsonProperty private Long pointId;
     @JsonProperty private Timestamp time;
     @JsonProperty private int peopleConcentration;
+    @JsonProperty private int weather;
     @JsonProperty private int season;
     @JsonProperty private boolean holiday;
     @JsonProperty private float timeIndex;
@@ -21,6 +22,7 @@ public class SourceRecord {
             Long pointId,
             TimeInstant time,
             int peopleConcentration,
+            int weather,
             int season,
             boolean holiday,
             float timeIndex,
@@ -30,6 +32,7 @@ public class SourceRecord {
         this.pointId = pointId;
         this.time = new Timestamp(time.getTimeInMillisecond());
         this.peopleConcentration = peopleConcentration;
+        this.weather = weather;
         this.season = season;
         this.holiday = holiday;
         this.timeIndex = timeIndex;
@@ -60,6 +63,14 @@ public class SourceRecord {
 
     public void setPeopleConcentration(int peopleConcentration) {
         this.peopleConcentration = peopleConcentration;
+    }
+
+    public int getWeather() {
+        return weather;
+    }
+
+    public void setWeather(int weather) {
+        this.weather = weather;
     }
 
     public int getSeason() {

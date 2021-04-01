@@ -4,19 +4,19 @@ package site.bitlab16;
 import org.junit.Before;
 import org.junit.Test;
 
-public class SimulatorTest {
+public class KafkaSimulatorTest {
 
-	//private Simulator simulator;
+	//private KafkaSimulator simulator;
 
 	@Before
 	public void setup() {
-		//this.simulator = null;//new Simulator();
+		//this.simulator = null;//new KafkaSimulator();
 	}
 
 	@Test
 	public void mainTest() {
 		
-		//Simulator.main(null);
+		//KafkaSimulator.main(null);
 
 		//assertTrue("Simulatore NON iniz correttamente", simulator != null);
 	}
