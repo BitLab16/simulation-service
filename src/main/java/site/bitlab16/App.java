@@ -28,11 +28,12 @@ public class App {
         
             case RELEASE:
                 BlockingDeque<SourceRecord> outQueue = new LinkedBlockingDeque<>();
+                String kafkaBootstrapServers = "kafka1:19091";
                 Simulator simulator = new Simulator(outQueue);
+                Consumer consumer = new Consumer("Simulatore 1", kafkaBootstrapServers, outQueue);
                 ExecutorService executor = Executors.newCachedThreadPool();
-                String kafkaBootstrapServers = "kafka-core:29092";
                 executor.execute(simulator);
-                executor.execute(new Consumer("Simulatore 1", kafkaBootstrapServers, outQueue));
+                executor.execute(consumer);
                 break;
             
             case DEBUG:
@@ -46,6 +47,5 @@ public class App {
                 });
                 break;                
         }
-
     }
 }

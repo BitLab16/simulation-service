@@ -32,9 +32,7 @@ public class Simulator implements Runnable {
     @Override
     public void run() {
 
-        /// INIT VARS
         TimeInstant when = new TimeInstant(new GregorianCalendar(2019, Calendar.JANUARY, 1), 0);
-        TimeInstant end = new TimeInstant(new GregorianCalendar(2019, Calendar.JANUARY, 2), 0);
         if (App.BUILD_MODE == App.ApplicationScope.DEBUG) {
             for (int i = 0; i < sources.length; i++) {
                 series.add( new TimeSeries("Series" + (i+1) + "_1", Minute.class) );
@@ -42,20 +40,22 @@ public class Simulator implements Runnable {
             }
         }
         Random random = new Random();
-        
-        while ( ! when.equals(end) ) {
 
-            for (int i = 0; i < sources.length; i++) {
-                
+        for (int i = 0; i < sources.length; i++) {
+            int season = 0;
+            for (int j = 0; j<10000; j++) {
+                season = j/2500;
                 if (sources[i].shouldPublish(when)) {
-
                     int num = sources[i].getValue(when);
                     int offset = (int)Math.round(random.nextGaussian()*3*((num+5)/65.));
-                    
-                    outQueue.add(new SourceRecord(1L, when, num+offset));
+                    outQueue.add(new SourceRecord(1L, when, num+offset, season, false, 0.0F, 0.0F, 0.0F, 0.0F));
                     
                 }
-
+                when.advance();
+                when.advance();
+                when.advance();
+                when.advance();
+                when.advance();
                 when.advance();
             }
         }
