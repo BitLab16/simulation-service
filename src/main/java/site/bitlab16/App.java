@@ -10,44 +10,48 @@ import javax.swing.WindowConstants;
 
 import site.bitlab16.kafka_producer.Consumer;
 import site.bitlab16.model.SourceRecord;
-import site.bitlab16.sources.WeeklyRawData;
 
 public class App {
 
     enum ApplicationScope {
         DEBUG, // Con grafici, assume server grafico
         RELEASE, // deployabile in un docker, no X11
-        TMP
+        CSV
     }
     
-    final public static ApplicationScope BUILD_MODE = ApplicationScope.DEBUG;
+    final public static ApplicationScope BUILD_MODE = ApplicationScope.RELEASE;
 
     
     public static void main( String[] args ) {
-        
+        var director = new SimulatorDirector();
+        BasicSimulator simulator = null;
         switch (BUILD_MODE) {
 
-            case TMP:
+            case CSV:
+                simulator = director.build(SimulatorType.CSV);
+                simulator.writeOutput();
                 break;
 
             case RELEASE:
-                BlockingDeque<SourceRecord> outQueue = new LinkedBlockingDeque<>();
+                simulator = director.build(SimulatorType.KAFKA);
+                //String kafkaBootstrapServers = "localhost:9091";
                 String kafkaBootstrapServers = "kafka1:19091";
-                Simulator simulator = new Simulator(outQueue);
-                Consumer consumer = new Consumer("Simulatore 1", kafkaBootstrapServers, outQueue);
+                Consumer consumer = new Consumer("Simulatore 1", kafkaBootstrapServers, ((KafkaSimulator) simulator).getOutQueue());
                 ExecutorService executor = Executors.newCachedThreadPool();
-                executor.execute(simulator);
                 executor.execute(consumer);
+                simulator.writeOutput();
                 break;
             
             case DEBUG:
-                SimulatorWithGraphs simulatorWindow = new SimulatorWithGraphs("---nome finestra---");
+                simulator = director.build(SimulatorType.BASIC);
+                System.out.println(simulator);
+                Graphic graphic = new Graphic(simulator, "---nome finestra---");
                 SwingUtilities.invokeLater(() -> {
-                    simulatorWindow.setSize(800, 400);
-                    simulatorWindow.setLocationRelativeTo(null);
-                    simulatorWindow.setVisible(true);
-                    simulatorWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                    simulatorWindow.run();
+                    graphic.setSize(800, 400);
+                    graphic.setLocationRelativeTo(null);
+                    graphic.setVisible(true);
+                    graphic.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                    graphic.run();
                 });
                 break;                
         }
