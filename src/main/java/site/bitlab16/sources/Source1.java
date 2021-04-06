@@ -13,8 +13,6 @@ public class Source1 extends SimulatedSource {
         return instance;
     }
 
-
-
     /* METHODS */
 
     @Override
@@ -37,30 +35,30 @@ public class Source1 extends SimulatedSource {
         return WeeklyRawData.getInstance().get(week).getDayOfWeek(dayOfWeek)[instant];
     }
 
-    // imposto l' effetto della pioggia
+    // imposto l' effetto della pioggia 
     @Override
-    protected int meteoEditValue(String date, int val, int instant, float modifier) {
-        return Math.round(val / (modifier*100+1)) + val/3;
+    protected int meteoEditValue(String date, int flow, int instant, float modifier) {
+        return Math.round(flow / (modifier*100+1)) + flow/3;
     }
 
     //imposto l'effetto delle stagioni
     @Override
-    protected int seasonEditValue(int dayOfYear, int val, int instant) {
+    protected int seasonEditValue(int dayOfYear, int flow, int instant) {
         int shifted = Math.abs(dayOfYear-183);
         double seasonMultiplier = 1 + 0.3 * (Math.cos(shifted*Math.PI/183*2)/2 - Math.abs(shifted)/400d);
-        return (int)Math.round(seasonMultiplier*val);
+        return (int)Math.round(seasonMultiplier*flow);
     }
 
     //imposto l'effetto delle stagioni
     @Override
-    protected int eventiEditValue(int val, float modifier) {
-        return Math.round((modifier+3)*val/3);
+    protected int eventiEditValue(int flow, float modifier) {
+        return Math.round((modifier+3)*flow/3);
     }
 
     //imposto l'effetto delle attività
     @Override
-    protected int attivitaEditValue(int val, float modifier) {
-        return Math.round((modifier+4)*val/4);
+    protected int attivitaEditValue(int flow, float modifier) {
+        return Math.round((modifier+4)*flow/4);
     }
 
 

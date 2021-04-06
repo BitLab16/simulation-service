@@ -2,9 +2,7 @@ package site.bitlab16;
 
 import site.bitlab16.sources.SimulatedSource;
 
-import java.util.List;
-
-public class CSVSimulatorBuilderImpl implements SimulatorBuilder<String>{
+public class CSVSimulatorBuilderImpl implements SimulatorBuilder<String> {
 
     private CSVSimulator simulator;
 
@@ -28,6 +26,7 @@ public class CSVSimulatorBuilderImpl implements SimulatorBuilder<String>{
         simulator.setOutputFileName(output);
     }
 
+    @Override
     public CSVSimulator build() {
         return simulator;
     }

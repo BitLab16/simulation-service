@@ -1,44 +1,37 @@
 package site.bitlab16;
 
+import java.util.concurrent.LinkedBlockingDeque;
+
 import site.bitlab16.sources.SimulatedSource;
 import site.bitlab16.sources.Source1;
-
-import java.util.Arrays;
-import java.util.concurrent.LinkedBlockingDeque;
 
 public class SimulatorDirector {
 
     public BasicSimulator build(SimulatorType type) {
 
         BasicSimulator simulator = null;
+        
+        SimulatorBuilder builder;
 
         switch (type) {
-            case KAFKA: {
-                var builder = new KafkaSimulatorBuilderImpl();
-                builder.reset();
-                builder.setSimulatorType(type);
-                builder.setOutput(new LinkedBlockingDeque<>());
-                builder.setSimulatedSource(new SimulatedSource[]{Source1.getInstance()});
-                simulator = builder.build();
+            case KAFKA: /*TODO : SCOPPIA??? CONTROLLARE IL CAST!*/
+                builder = new KafkaSimulatorBuilderImpl();
+                ((KafkaSimulatorBuilderImpl)builder).setOutput(new LinkedBlockingDeque<>());
                 break;
-            }
-            case CSV: {
-                var builder = new CSVSimulatorBuilderImpl();
-                builder.reset();
-                builder.setSimulatorType(type);
-                builder.setSimulatedSource(new SimulatedSource[]{Source1.getInstance()});
-                simulator = builder.build();
+            case CSV:
+                builder = new CSVSimulatorBuilderImpl();
                 break;
-            }
-            case BASIC: {
-                var builder = new BasicSimulatorBuilderImpl();
-                builder.reset();
-                builder.setSimulatorType(type);
-                builder.setSimulatedSource(new SimulatedSource[]{Source1.getInstance()});
-                simulator = builder.build();
+            case BASIC:
+                builder = new BasicSimulatorBuilderImpl();
                 break;
-            }
+            default:
+                builder = new BasicSimulatorBuilderImpl();
+                break;
+
         }
-        return simulator;
+        builder.reset();
+        builder.setSimulatorType(type);
+        builder.setSimulatedSource(new SimulatedSource[]{Source1.getInstance()});
+        return builder.build();
     }
 }

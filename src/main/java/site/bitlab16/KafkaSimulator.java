@@ -12,15 +12,6 @@ public class KafkaSimulator extends BasicSimulator {
 
     BlockingDeque<SourceRecord> outQueue;
 
-    public KafkaSimulator(){}
-
-    public KafkaSimulator(BlockingDeque<SourceRecord> outQueue) {
-
-        this.outQueue = outQueue;
-
-        sources = new SimulatedSource[] { new Source1() };
-    }
-
     @Override
     public void writeOutput() {
 

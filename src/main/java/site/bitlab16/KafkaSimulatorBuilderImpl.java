@@ -29,6 +29,7 @@ public class KafkaSimulatorBuilderImpl implements SimulatorBuilder<BlockingDeque
         kafkaSimulator.setOutQueue(output);
     }
 
+    @Override
     public KafkaSimulator build() {
         return kafkaSimulator;
     }

@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 public class WeeklyRawData {
 
     private static WeeklyRawData instance = null;
-    private final Random random = new Random(10203040);
+    private static final Random random = new Random(10203040);
 
     public static WeeklyRawData getInstance() {
         if (instance == null)
@@ -35,6 +35,33 @@ public class WeeklyRawData {
             return Arrays.copyOfRange(weekData, 288*(dayOfWeek-1), 288*dayOfWeek);
         }
     }
+    /**
+     * Iteratore per andare a istanziare gli array contenenti i flow dei vari anni
+     */
+    public static class WeekDayIterator {
+        protected Random random;
+        WeeklyRawData weeks;
+        int[] week;
+        int instant;
+        WeekDayIterator(Random random) {
+            this.random = random;
+            reset();
+        }
+        void reset() {
+            weeks = WeeklyRawData.getInstance();
+            int selectedWeek = random.nextInt(weeks.size());
+            week = weeks.get(selectedWeek).getWeek();
+            instant = 0;
+        }
+        int getAndAdvance() {
+            int flow = week[instant];
+            if (++instant == week.length)
+                reset();
+            return flow;
+        }
+
+    }
+    
 
     private ArrayList<Week> data = new ArrayList<>();
     

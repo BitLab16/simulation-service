@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.stream.Stream;
 
 import site.bitlab16.TimeInstant;
+import site.bitlab16.sources.WeeklyRawData.WeekDayIterator;
 
 /**
  * CLASSE ASTRATTA CHE RAPPRESENTA LA SORGENTE DATI
@@ -24,9 +25,11 @@ public abstract class SimulatedSource {
 
     //////////////////////////// STATIC
 
+    private static Random random;
     protected static final Calendar start;
     protected static final Calendar end;
-    static final int len_18_19_20_21_22 = 288*365 + 288*365 + 288*366 + 288*365 + 288*365;
+    // intero usato come indice che rappresenta tutti gli istanti registrati nel corso della simulazione
+    static final int len_18_19_20_21_22 = 288*365*4 + 288*366;
     private static final SimpleDateFormat dateFormat;
 
     // tabelle statiche festività, meteo, ...
@@ -63,38 +66,20 @@ public abstract class SimulatedSource {
 
     //////////////////////////// NON STATIC
 
-    
-    protected final Random random;
+    /**
+     * Array di int che indicano il flow in un determinato istante
+     * 365/366 = giorni dell'anno
+     * 288 = rilevazioni in un singolo giorno
+     */
     protected int[] data2018 = new int[288*365];
     protected int[] data2019 = new int[288*365];
     protected int[] data2020 = new int[288*366]; // leap
     protected int[] data2021 = new int[288*365];
     protected int[] data2022 = new int[288*365];
     
-    private class WeekDayIterator { // TODO: move to WeeklyRawData.java?
-        WeeklyRawData weeks;
-        int[] week;
-        int instant;
-        WeekDayIterator() {
-            reset();
-        }
-        void reset() {
-            weeks = WeeklyRawData.getInstance();
-            int selectedWeek = random.nextInt(weeks.size());
-            week = weeks.get(selectedWeek).getWeek();
-            instant = 0;
-        }
-        int getAndAdvance() {
-            int flow = week[instant];
-            if (++instant == week.length)
-                reset();
-            return flow;
-        }
-
-    }
     SimulatedSource() {
         random = new Random(getSeed());
-        WeekDayIterator iterator = new WeekDayIterator();
+        WeekDayIterator iterator = new WeekDayIterator(random);
         //2018
         for(int i = 0; i < 288*365; i++) {
                 data2018[i] = iterator.getAndAdvance();
@@ -144,8 +129,6 @@ public abstract class SimulatedSource {
             return -1;
         int i;
         i =  getSourceSpecificExpectedValue(when);
-        i = attivita(when, i);
-        i = stagione(when, i);
         return i;
     }
 
@@ -168,6 +151,7 @@ public abstract class SimulatedSource {
                     return -1;
             }
     }
+    
     public float getEventi(TimeInstant when) {
         return dataEventi.get(dateFormat.format(when.getDay().getTime()), when.getInstant());
     }
@@ -181,10 +165,10 @@ public abstract class SimulatedSource {
         int offset = 0;
         int year = when.getDay().get(Calendar.YEAR);
         switch (year) {
-            case 2022: offset += 288*365; //add 2021
-            case 2021: offset += 288*366; //add 2020
-            case 2020: offset += 288*365; //add 2019
-            case 2019: offset += 288*365; //add 2018
+            case 2022: offset += 288*365*3 + 288*366; break; //add 2021
+            case 2021: offset += 288*366 + 288*365*2; break; //add 2020
+            case 2020: offset += 288*365*2; break; //add 2019
+            case 2019: offset += 288*365; break; //add 2018
             default: break;
         }
         offset += (when.getDay().get(Calendar.DAY_OF_YEAR)-1)*288;
@@ -236,6 +220,7 @@ public abstract class SimulatedSource {
             modifierAttivita /= 16;
             switch (year) {
                 case 2018:
+                    // NON CAMBIARE L'ORDINE CON CUI VENGONO CHIAMATI I METODI ALTRIMENTI SI ROMPE !!!
                     data2018[offset] = festeEditValue(date, data2018[offset], instant, modifierFeste);
                     data2018[offset] = meteoEditValue(date, data2018[offset], instant, modifierMeteo);
                     data2018[offset] = seasonEditValue(when.get(Calendar.DAY_OF_YEAR), data2018[offset], instant);
@@ -288,13 +273,6 @@ public abstract class SimulatedSource {
     protected abstract int eventiEditValue(int val, float modifier);
     /*stabilisce l'effetto delle attivita*/
     protected abstract int attivitaEditValue(int val, float modifier);
-
-    private static int attivita(TimeInstant when, int flow) {
-        return flow;
-    }
-    private static int stagione(TimeInstant when, int i) {
-        return i;
-    }
 
 
     //// qui se voglio usare ARIMA

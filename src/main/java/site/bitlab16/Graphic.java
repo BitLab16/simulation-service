@@ -33,7 +33,7 @@ public class Graphic extends JFrame implements Runnable {
 
         /// INIT VARS
         TimeInstant when = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 1), 0);
-        TimeInstant end = new TimeInstant(new GregorianCalendar(2023, Calendar.JANUARY, 1), 0);
+        TimeInstant end = new TimeInstant(new GregorianCalendar(2021, Calendar.JANUARY, 1), 0);
         var series = new ArrayList<TimeSeries>();
         for (int i = 0; i < simulator.getSources().length; i++) {
             series.add( new TimeSeries("Series" + (i+1) + "_1", Minute.class) );

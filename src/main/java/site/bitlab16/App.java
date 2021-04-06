@@ -1,15 +1,12 @@
 package site.bitlab16;
 
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingDeque;
 
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import site.bitlab16.kafka_producer.Consumer;
-import site.bitlab16.model.SourceRecord;
 
 public class App {
 
@@ -19,7 +16,7 @@ public class App {
         CSV
     }
     
-    final public static ApplicationScope BUILD_MODE = ApplicationScope.RELEASE;
+    final public static ApplicationScope BUILD_MODE = ApplicationScope.DEBUG;
 
     
     public static void main( String[] args ) {

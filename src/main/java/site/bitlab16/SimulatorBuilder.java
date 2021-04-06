@@ -9,4 +9,5 @@ public interface SimulatorBuilder<T> {
     default void setOutput(T output) throws Exception {
         throw new Exception("setOutput non e' definito per questo simulator");
     };
+    BasicSimulator build();
 }
