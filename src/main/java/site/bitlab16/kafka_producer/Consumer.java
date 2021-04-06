@@ -48,7 +48,7 @@ public class Consumer implements Runnable, AutoCloseable {
                 kafkaProducer.send(kafkaRecord);
             }
         } catch (InterruptedException ex) {
-            System.out.println("Consumer interrotto");
+            ex.printStackTrace();
         } finally {
             kafkaProducer.flush();
             kafkaProducer.close();

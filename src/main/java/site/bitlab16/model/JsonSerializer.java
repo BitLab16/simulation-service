@@ -39,8 +39,6 @@ public class JsonSerializer implements Serializer<SourceRecord> {
             JsonNode jsonSchema = jsonSchemaGenerator.generateJsonSchema(SourceRecord.class);
 
             var a = mapper.writeValueAsBytes(sourceRecord);
-            //System.out.print(jsonSchema);
-            //System.out.println(a);
             return a;
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException(e);
