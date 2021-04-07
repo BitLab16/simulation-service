@@ -2,6 +2,8 @@ package site.bitlab16.sources;
 
 import java.util.Calendar;
 
+import site.bitlab16.sources.WeeklyRawData.WeekDayIterator;
+
 public class Source1 extends SimulatedSource {
 
     /* CREATION */
@@ -17,6 +19,34 @@ public class Source1 extends SimulatedSource {
 
     @Override
     public int getSeed() { return 1; }
+
+    @Override
+    protected void generateData() {
+        
+        WeekDayIterator iterator = new WeekDayIterator(random);
+        //2018
+        for(int i = 0; i < 288*365; i++) {
+                data2018[i] = iterator.getAndAdvance();
+        }
+        //2019
+        for(int i = 0; i < 288*365; i++) {
+                data2019[i] = iterator.getAndAdvance();
+        }
+        //2020
+        for(int i = 0; i < 288*366; i++) {
+                data2020[i] = iterator.getAndAdvance();
+        }
+        //2021
+        for(int i = 0; i < 288*365; i++) {
+                data2021[i] = iterator.getAndAdvance();
+        }
+        //2022
+        for(int i = 0; i < 288*365; i++) {
+                data2022[i] = iterator.getAndAdvance();
+        }
+        
+    }
+    
 
     // sostituisco i giorni di festa con sabati e domeniche
     @Override

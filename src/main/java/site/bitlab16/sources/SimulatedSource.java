@@ -4,13 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
 import java.util.stream.Stream;
 
+import com.workday.insights.timeseries.arima.Arima;
+import com.workday.insights.timeseries.arima.struct.ArimaParams;
+import com.workday.insights.timeseries.arima.struct.ForecastResult;
+
 import site.bitlab16.TimeInstant;
-import site.bitlab16.sources.WeeklyRawData.WeekDayIterator;
 
 /**
  * CLASSE ASTRATTA CHE RAPPRESENTA LA SORGENTE DATI
@@ -25,7 +29,6 @@ public abstract class SimulatedSource {
 
     //////////////////////////// STATIC
 
-    private static Random random;
     protected static final Calendar start;
     protected static final Calendar end;
     // intero usato come indice che rappresenta tutti gli istanti registrati nel corso della simulazione
@@ -71,6 +74,7 @@ public abstract class SimulatedSource {
      * 365/366 = giorni dell'anno
      * 288 = rilevazioni in un singolo giorno
      */
+    protected Random random;
     protected int[] data2018 = new int[288*365];
     protected int[] data2019 = new int[288*365];
     protected int[] data2020 = new int[288*366]; // leap
@@ -79,27 +83,6 @@ public abstract class SimulatedSource {
     
     SimulatedSource() {
         random = new Random(getSeed());
-        WeekDayIterator iterator = new WeekDayIterator(random);
-        //2018
-        for(int i = 0; i < 288*365; i++) {
-                data2018[i] = iterator.getAndAdvance();
-        }
-        //2019
-        for(int i = 0; i < 288*365; i++) {
-                data2019[i] = iterator.getAndAdvance();
-        }
-        //2020
-        for(int i = 0; i < 288*366; i++) {
-                data2020[i] = iterator.getAndAdvance();
-        }
-        //2021
-        for(int i = 0; i < 288*365; i++) {
-                data2021[i] = iterator.getAndAdvance();
-        }
-        //2022
-        for(int i = 0; i < 288*365; i++) {
-                data2022[i] = iterator.getAndAdvance();
-        }
         
         dataEventi = new ConcentrationModifier();
         dataAttivita = new ConcentrationModifier();
@@ -119,6 +102,7 @@ public abstract class SimulatedSource {
             e.printStackTrace();
         }
 
+        generateData();
         applyModifiers();
     }
     
@@ -197,6 +181,7 @@ public abstract class SimulatedSource {
         modifierMeteo += cumulative/(x1-x0)/2;
         return modifierMeteo;
     }
+    protected abstract void generateData();
     private void applyModifiers() {
         Calendar when = (Calendar)start.clone();
         String date;
@@ -275,39 +260,35 @@ public abstract class SimulatedSource {
     protected abstract int attivitaEditValue(int val, float modifier);
 
 
-    //// qui se voglio usare ARIMA
-    //in base a n dati passati predico m dati futuri
-    /* !!! è un macello ma l'idea è testata funziona
-    int[] predict(int input[]) {
+    // qui se voglio usare ARIMA
+    // in base a input.length dati passati predico forecastSize dati futuri
+    // ATTN! input.lenght dev essere multiplo di 288, perchè predice un tot di giorni
+    private final int p = 7, d = 1, q = 7, P = 2, D = 1, Q = 1, m = p+q+1;
+    private final ArimaParams params = new ArimaParams(p, d, q, P, D, Q, m);
+    protected int[] predict(int[] inputData, int forecastSize) {
 
-        //predico il futuro
-        int p = 7*3, d = 0, q = 7*3, P = 1, D = 1, Q = 0, m = p+q+1;
-        int forecastSize = 365;
-        ArimaParams params = new ArimaParams(p, d, q, P, D, Q, m);
-
-        int[][] input1819 = new int[288][365*2];
-        int[][] result20 = new int[288][366];
-        for (int i = 0; i < 288; i++) {
-            for (int j = 0; j < 365; j++) {
-                input1819[i][j] = data2018[j*288+i];
-                input1819[i][j+365] = data2019[j*288+i];
+        int[][] inputSpiltData = new int[288][inputData.length/288];
+        int[][] outputSplitData = new int[288][forecastSize];
+        for (int day = 0; day < inputData.length/288; day++) {
+            for (int instant = 0; instant < 288; instant++) {
+                inputSpiltData[instant][day] = inputData[day*288+instant];
             }
         }
-
         for (int i = 0; i < 288; i++) {
             ForecastResult forecastResult = Arima.forecast_arima(
-                Arrays.stream(input1819[i]).asDoubleStream().toArray(),
-                forecastSize,
-                params);
-            result20[i] = Arrays.stream(forecastResult.getForecast())
+                Arrays.stream(inputSpiltData[i]).asDoubleStream().toArray(), // array di input
+                forecastSize, // dimensione predizione
+                params); // paramentri
+            outputSplitData[i] = Arrays.stream(forecastResult.getForecast()) // prendo l'output
                 .mapToInt(num -> (int)Math.round(num)).toArray();
         }
         
-        for (int i = 0; i < 288; i++) {
-            for (int j = 0; j < 365; j++) {
-                data2020[j*288+i] = result20[i][j];
-            }
-        }
+        int[] outputData = new int[288*forecastSize];
+        for (int i = 0; i < forecastSize; i++)
+            for (int j = 0; j < 288; j++)
+                outputData[i*288+j] = outputSplitData[j][i];
+        
+        return outputData;
     }
-    */
+    
 }

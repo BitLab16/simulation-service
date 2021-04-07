@@ -2,8 +2,6 @@ package site.bitlab16;
 
 import site.bitlab16.sources.SimulatedSource;
 
-import javax.swing.*;
-
 public class BasicSimulator{
 
     protected SimulatorType type;

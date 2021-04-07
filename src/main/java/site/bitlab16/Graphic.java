@@ -1,5 +1,12 @@
 package site.bitlab16;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import javax.swing.JFrame;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -9,15 +16,6 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.Minute;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 public class Graphic extends JFrame implements Runnable {
 
@@ -33,7 +31,7 @@ public class Graphic extends JFrame implements Runnable {
 
         /// INIT VARS
         TimeInstant when = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 1), 0);
-        TimeInstant end = new TimeInstant(new GregorianCalendar(2021, Calendar.JANUARY, 1), 0);
+        TimeInstant end = new TimeInstant(new GregorianCalendar(2023, Calendar.JANUARY, 11), 0);
         var series = new ArrayList<TimeSeries>();
         for (int i = 0; i < simulator.getSources().length; i++) {
             series.add( new TimeSeries("Series" + (i+1) + "_1", Minute.class) );
