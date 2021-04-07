@@ -3,7 +3,7 @@ package site.bitlab16;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import site.bitlab16.sources.SimulatedSource;
-import site.bitlab16.sources.Source1;
+import site.bitlab16.sources.Source2;
 
 public class SimulatorDirector {
 
@@ -31,7 +31,7 @@ public class SimulatorDirector {
         }
         builder.reset();
         builder.setSimulatorType(type);
-        builder.setSimulatedSource(new SimulatedSource[]{Source1.getInstance()});
+        builder.setSimulatedSource(new SimulatedSource[]{Source2.getInstance()});
         return builder.build();
     }
 }

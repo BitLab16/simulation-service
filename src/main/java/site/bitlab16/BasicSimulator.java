@@ -2,7 +2,7 @@ package site.bitlab16;
 
 import site.bitlab16.sources.SimulatedSource;
 
-public class BasicSimulator{
+public class BasicSimulator {
 
     protected SimulatorType type;
 
