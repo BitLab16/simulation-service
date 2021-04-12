@@ -36,7 +36,7 @@ public abstract class SimulatedSource {
     private static final SimpleDateFormat dateFormat;
 
     // tabelle statiche festività, meteo, ...
-    protected static float[] dataMeteo;
+    protected static float[] modifierMeteo;
     protected static ConcentrationModifier dataFestivita;
     protected ConcentrationModifier dataAttivita; // NON STATICO! DIPENDE DALLA SORGENTE!
     protected ConcentrationModifier dataEventi; // NON STATICO! DIPENDE DALLA SORGENTE!
@@ -45,7 +45,7 @@ public abstract class SimulatedSource {
         end = new GregorianCalendar(2022, Calendar.DECEMBER, 31);
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        dataMeteo = new float[len_18_19_20_21_22];
+        modifierMeteo = new float[len_18_19_20_21_22];
         dataFestivita = new ConcentrationModifier();
         try (
             Stream<String> festivitaStream = Files.lines(new File("data/festivita.csv").toPath());
@@ -56,10 +56,9 @@ public abstract class SimulatedSource {
             });
             String linesMeteo[] = meteoStream.toArray(String[]::new);
             for (int i = 0; i < len_18_19_20_21_22/2; i++) {
-                dataMeteo[i*2] = Float.parseFloat(linesMeteo[i]);
-                dataMeteo[i*2+1] = Float.parseFloat(linesMeteo[i]);
+                modifierMeteo[i*2] = Float.parseFloat(linesMeteo[i]);
+                modifierMeteo[i*2+1] = Float.parseFloat(linesMeteo[i]);
             }
-
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -81,7 +80,7 @@ public abstract class SimulatedSource {
     protected int[] data2021 = new int[288*365];
     protected int[] data2022 = new int[288*365];
     
-    SimulatedSource() {
+    protected SimulatedSource() {
         random = new Random(getSeed());
         
         dataEventi = new ConcentrationModifier();
@@ -107,13 +106,14 @@ public abstract class SimulatedSource {
     }
     
     public abstract int getSeed();
+    protected float baseMultiplier = 1f;
 
     public final int getValue(TimeInstant when) {
         if (when.getDay().compareTo(start) < 0 || when.getDay().compareTo(end) > 0)
             return -1;
         int i;
         i =  getSourceSpecificExpectedValue(when);
-        return i;
+        return Math.round(i*baseMultiplier);
     }
 
     protected int getSourceSpecificExpectedValue(TimeInstant when) {
@@ -145,6 +145,20 @@ public abstract class SimulatedSource {
     public float getFestivita(TimeInstant when) {
         return dataFestivita.get(dateFormat.format(when.getDay().getTime()), when.getInstant());
     }
+    public final int getModifierMeteoAsEnum(TimeInstant when) {
+        float modifier = getModifierMeteo(when);
+        if (modifier < 0.05)
+            return 0;
+        if(modifier < 0.13)
+            return 1;
+        if(modifier < 0.2)
+            return 2;
+        if(modifier < 0.3)
+            return 3;
+        if(modifier < 0.5)
+            return 4;
+        return 5;
+    }
     public float getModifierMeteo(TimeInstant when) {
         int offset = 0;
         int year = when.getDay().get(Calendar.YEAR);
@@ -160,26 +174,26 @@ public abstract class SimulatedSource {
         return getModifierMeteo(offset);
     }
     private float getModifierMeteo(int offset) {
-        float modifierMeteo = 0f;
+        float ret = 0f;
         int x0 = Math.max(offset-50, 0);
         int x1 = Math.min(offset+50, len_18_19_20_21_22);
         float cumulative = 0f;
         for (int j = x0; j < x1; j++)
-            cumulative += dataMeteo[j];
-        modifierMeteo += cumulative/(x1-x0);
+            cumulative += modifierMeteo[j];
+        ret += cumulative/(x1-x0);
         x0 = Math.max(offset-100, 0);
         x1 = Math.min(offset-50, len_18_19_20_21_22);
         cumulative = 0f;
         for (int j = x0; j < x1; j++)
-            cumulative += dataMeteo[j];
-        modifierMeteo += cumulative/(x1-x0)/2;
+            cumulative += modifierMeteo[j];
+        ret += cumulative/(x1-x0)/2;
         x0 = Math.max(offset+50, 0);
         x1 = Math.min(offset+100, len_18_19_20_21_22);
         cumulative = 0f;
         for (int j = x0; j < x1; j++)
-            cumulative += dataMeteo[j];
-        modifierMeteo += cumulative/(x1-x0)/2;
-        return modifierMeteo;
+            cumulative += modifierMeteo[j];
+        ret += cumulative/(x1-x0)/2;
+        return ret;
     }
     protected abstract void generateData();
     private void applyModifiers() {
@@ -248,6 +262,7 @@ public abstract class SimulatedSource {
         }
     
     }
+    
     /*sostituisce i giorni di festa con altri profili, CHIAMARE PER PRIMA*/
     protected abstract int festeEditValue(String date, int val, int instant, float modifier);
     /*stabilisce l'effetto del meteo*/
@@ -259,6 +274,11 @@ public abstract class SimulatedSource {
     /*stabilisce l'effetto delle attivita*/
     protected abstract int attivitaEditValue(int val, float modifier);
 
+    public abstract float getIndiceOrario();
+    public abstract float getIndiceAttivita();
+    public abstract float getIndiceMeteo();
+    public abstract float getIndiceStagione();
+    public abstract float getIndiceEventi();
 
     // qui se voglio usare ARIMA
     // in base a input.length dati passati predico forecastSize dati futuri

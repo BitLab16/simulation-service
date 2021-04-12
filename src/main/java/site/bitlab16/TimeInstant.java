@@ -60,7 +60,7 @@ public class TimeInstant {
         return new Minute(mm, hh, dd, MM, yyyy);
     }
 
-    public long getTimeInMillisecond() {
+    public long getTimeInMillis() {
         Calendar cal = (Calendar) this.day.clone();
         cal.add(Calendar.HOUR, this.instant /12);
         cal.add(Calendar.MINUTE, (this.instant%12) * 5);

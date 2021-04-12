@@ -5,8 +5,6 @@ import java.util.GregorianCalendar;
 import java.util.concurrent.BlockingDeque;
 
 import site.bitlab16.model.SourceRecord;
-import site.bitlab16.sources.SimulatedSource;
-import site.bitlab16.sources.Source1;
 
 public class KafkaSimulator extends BasicSimulator {
 
@@ -36,11 +34,11 @@ public class KafkaSimulator extends BasicSimulator {
                             flow,
                             meteoAsEnum,
                             seasons[when.getDay().get(Calendar.MONTH)],
-                            sources[i].getFestivita(when)==0 ? false : true,
-                            3F,
-                            3F,
-                            4F,
-                            2F));
+                            sources[i].getFestivita(when)==0 ? false : true,//holiday
+                            sources[i].getIndiceOrario(),
+                            sources[i].getIndiceMeteo(),
+                            sources[i].getIndiceStagione(),
+                            sources[i].getIndiceAttivita()));
                 }
                 when.advance();
             }

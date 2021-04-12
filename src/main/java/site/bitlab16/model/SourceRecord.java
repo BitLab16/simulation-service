@@ -30,7 +30,7 @@ public class SourceRecord {
             float seasonIndex,
             float attractionsIndex) {
         this.pointId = pointId;
-        this.time = new Timestamp(time.getTimeInMillisecond());
+        this.time = new Timestamp(time.getTimeInMillis());
         this.peopleConcentration = peopleConcentration;
         this.weather = weather;
         this.season = season;

@@ -38,15 +38,7 @@ public class CSVSimulator extends BasicSimulator {
                 line += when.toString() + ',';
                 final int[] seasons = new int[]{0,0,0,1,1,1,2,2,2,3,3,3};
                 line += seasons[when.getDay().get(Calendar.MONTH)] + ",";
-                float dataMeteo = sources[i].getModifierMeteo(when);
-                int meteoAsEnum;
-                if (dataMeteo < 0.05) meteoAsEnum = 0;
-                else if(dataMeteo < 0.13) meteoAsEnum = 1;
-                else if(dataMeteo < 0.2) meteoAsEnum = 2;
-                else if(dataMeteo < 0.3) meteoAsEnum = 3;
-                else if(dataMeteo < 0.5) meteoAsEnum = 4;
-                else meteoAsEnum = 5;
-                line += meteoAsEnum + ",";
+                line += sources[i].getModifierMeteoAsEnum(when) + ",";
                 line += (sources[i].getEventi(when)==0 ? 0 : 1) + ",";
                 line += (sources[i].getAttivita(when)==0 ? 0 : 1) + ",";
                 line += (sources[i].getFestivita(when)==0 ? 0 : 1) + ",";

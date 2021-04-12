@@ -1,24 +1,44 @@
-package site.bitlab16.sources;
+package site.bitlab16.sources.points;
 
 import java.util.Calendar;
 
+import site.bitlab16.sources.SimulatedSource;
+import site.bitlab16.sources.WeeklyRawData;
 import site.bitlab16.sources.WeeklyRawData.WeekDayIterator;
 
-public class Source2 extends SimulatedSource {
+public class Garibaldi extends SimulatedSource {
 
     /* CREATION */
 
     private static SimulatedSource instance;
     public static SimulatedSource getInstance() {
         if (instance == null)
-            instance = new Source2();
+            instance = new Garibaldi();
         return instance;
+    }
+    protected Garibaldi() {
+        baseMultiplier = 0.8f;
     }
 
     /* METHODS */
 
     @Override
-    public int getSeed() { return 2; }
+    public int getSeed() { return 3; }
+
+
+    private int curva1(int val, int i) {
+        if (i>95 && i<=110)
+            return val+3;
+        if (i>110 && i <=120)
+            return val+7;
+        if (i>120 && i<=180)
+            return val+11;
+        if (i>180 && i <=190)
+            return val+7;
+        if (i>190 && i <=200)
+            return val+3;
+        return val;
+    }
 
     @Override
     protected void generateData() {
@@ -26,23 +46,23 @@ public class Source2 extends SimulatedSource {
         WeekDayIterator iterator = new WeekDayIterator(random);
         //2018
         for(int i = 0; i < 288*365; i++) {
-                data2018[i] = -1000;//iterator.getAndAdvance();
+                data2018[i] = curva1(iterator.getAndAdvance(), i%288);
         }
         //2019
         for(int i = 0; i < 288*365; i++) {
-                data2019[i] = iterator.getAndAdvance();
+                data2019[i] = curva1(iterator.getAndAdvance(), i%288);
         }
         //2020
         for(int i = 0; i < 288*366; i++) {
-                data2020[i] = iterator.getAndAdvance();
+                data2020[i] = curva1(iterator.getAndAdvance(), i%288);
         }
         //2021
         for(int i = 0; i < 288*365; i++) {
-                data2021[i] = iterator.getAndAdvance();
+                data2021[i] = curva1(iterator.getAndAdvance(), i%288);
         }
         //2022
         for(int i = 0; i < 288*365; i++) {
-                data2022[i] = iterator.getAndAdvance();
+                data2022[i] = curva1(iterator.getAndAdvance(), i%288);
         }
         
     }
@@ -68,28 +88,49 @@ public class Source2 extends SimulatedSource {
     // imposto l' effetto della pioggia 
     @Override
     protected int meteoEditValue(String date, int flow, int instant, float modifier) {
-        return Math.round(flow / (modifier*100+1)) + flow/3;
+        return Math.round(flow / (modifier*100+1) + flow/getIndiceMeteo());
     }
 
     //imposto l'effetto delle stagioni
     @Override
     protected int seasonEditValue(int dayOfYear, int flow, int instant) {
         int shifted = Math.abs(dayOfYear-183);
-        double seasonMultiplier = 1 + 0.3 * (Math.cos(shifted*Math.PI/183*2)/2 - Math.abs(shifted)/400d);
+        double seasonMultiplier = 0.8 + getIndiceStagione()/10 * (Math.cos(shifted*Math.PI/183*2)/2 - Math.abs(shifted)/400d);
         return (int)Math.round(seasonMultiplier*flow);
     }
 
     //imposto l'effetto delle stagioni
     @Override
     protected int eventiEditValue(int flow, float modifier) {
-        return Math.round((modifier+3)*flow/3);
+        return Math.round((modifier+getIndiceEventi())*flow/getIndiceEventi());
     }
 
     //imposto l'effetto delle attività
     @Override
     protected int attivitaEditValue(int flow, float modifier) {
-        return Math.round((modifier+4)*flow/4);
+        return Math.round((modifier+getIndiceAttivita())*flow/getIndiceAttivita());
     }
 
+    
+    @Override
+    public float getIndiceOrario() {
+        return 1000;
+    }
+    @Override
+    public float getIndiceMeteo() {
+        return 2;
+    }
+    @Override
+    public float getIndiceStagione() {
+        return 3;
+    }
+    @Override
+    public float getIndiceAttivita() {
+        return 5;
+    }
+    @Override
+    public float getIndiceEventi() {
+        return 2;
+    }
 
 }

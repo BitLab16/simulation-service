@@ -40,20 +40,20 @@ public class WeeklyRawData {
      */
     public static class WeekDayIterator {
         protected Random random;
-        WeeklyRawData weeks;
+        final WeeklyRawData weeks;
         int[] week;
         int instant;
-        WeekDayIterator(Random random) {
+        public WeekDayIterator(Random random) {
+            weeks = WeeklyRawData.getInstance();
             this.random = random;
             reset();
         }
         void reset() {
-            weeks = WeeklyRawData.getInstance();
             int selectedWeek = random.nextInt(weeks.size());
             week = weeks.get(selectedWeek).getWeek();
             instant = 0;
         }
-        int getAndAdvance() {
+        public int getAndAdvance() {
             int flow = week[instant];
             if (++instant == week.length)
                 reset();
