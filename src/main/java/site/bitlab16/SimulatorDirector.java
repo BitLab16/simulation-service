@@ -3,6 +3,7 @@ package site.bitlab16;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import site.bitlab16.sources.SimulatedSource;
+import site.bitlab16.sources.points.Fiera;
 import site.bitlab16.sources.points.Garibaldi;
 import site.bitlab16.sources.points.Paolotti;
 import site.bitlab16.sources.points.Prato;
@@ -33,10 +34,11 @@ public class SimulatorDirector {
         builder.reset();
         builder.setSimulatorType(type);
         builder.setSimulatedSource(new SimulatedSource[] {
-            /*Paolotti.getInstance(),
+            Paolotti.getInstance(),
             Prato.getInstance(),
             Garibaldi.getInstance(),
-            */Supermercato.getInstance()
+            Supermercato.getInstance(),
+            Fiera.getInstance()
         });
         return builder.build();
     }

@@ -99,7 +99,7 @@ public class Garibaldi extends SimulatedSource {
         return (int)Math.round(seasonMultiplier*flow);
     }
 
-    //imposto l'effetto delle stagioni
+    //imposto l'effetto degli eventi
     @Override
     protected int eventiEditValue(int flow, float modifier) {
         return Math.round((modifier+getIndiceEventi())*flow/getIndiceEventi());

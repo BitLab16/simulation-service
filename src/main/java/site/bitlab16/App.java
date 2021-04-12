@@ -41,7 +41,7 @@ public class App {
             
             case DEBUG:
                 simulator = director.build(SimulatorType.BASIC);
-                Graphic graphic = new Graphic(simulator, "---nome finestra---");
+                Graphic graphic = new Graphic(simulator, "Dati simulati");
                 SwingUtilities.invokeLater(() -> {
                     graphic.setSize(800, 400);
                     graphic.setLocationRelativeTo(null);

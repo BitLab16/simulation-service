@@ -84,7 +84,7 @@ public class Paolotti extends SimulatedSource { // PAOLOTTI
         return (int)Math.round(seasonMultiplier*flow);
     }
 
-    //imposto l'effetto delle stagioni
+    //imposto l'effetto degli eventi
     @Override
     protected int eventiEditValue(int flow, float modifier) {
         return Math.round((modifier+getIndiceEventi())*flow/getIndiceEventi());
@@ -111,7 +111,7 @@ public class Paolotti extends SimulatedSource { // PAOLOTTI
     }
     @Override
     public float getIndiceAttivita() {
-        return .5f;
+        return 1.1f;
     }
     @Override
     public float getIndiceEventi() {

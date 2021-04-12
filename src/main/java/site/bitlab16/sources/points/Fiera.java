@@ -3,10 +3,8 @@ package site.bitlab16.sources.points;
 import java.util.Calendar;
 
 import site.bitlab16.sources.SimulatedSource;
-import site.bitlab16.sources.WeeklyRawData;
-import site.bitlab16.sources.WeeklyRawData.SpecificWeekDayIterator;
 
-public class Fiera extends SimulatedSource {
+public class Fiera extends PuntoAllAperto {
 
     /* CREATION */
 
@@ -17,91 +15,30 @@ public class Fiera extends SimulatedSource {
         return instance;
     }
     protected Fiera() {
-        baseMultiplier = 0.05f;
+        baseMultiplier = 0.12f;
     }
 
     /* METHODS */
 
+    static final int[] usableDays = {Calendar.SATURDAY, Calendar.SATURDAY};
     @Override
-    public int getSeed() { return 4; }
-
-
-    @Override
-    protected void generateData() {
-        
-        //confronto un sabaato e una domanic arandom per farne la somma.
-        //considero tutti i giorni sabati-domeniche
-        SpecificWeekDayIterator iterator = new SpecificWeekDayIterator(random);
-        int[] day1;
-        int[] day2;
-        //2018
-        for(int i = 0; i < 365; i++) {
-            day1 = iterator.getDayOfWeek(Calendar.MONDAY);
-            day2 = iterator.getDayOfWeek(Calendar.SUNDAY);
-            for (int instant = 0; instant < 288; instant++)
-                data2018[i*288+instant] = day1[instant] + day2[instant];
-        }
-        //2019
-        for(int i = 0; i < 288*365; i++) {
-            data2019[i] = 0;
-        }
-        //2020
-        for(int i = 0; i < 288*366; i++) {
-            data2020[i] = 0;
-        }
-        //2021
-        for(int i = 0; i < 288*365; i++) {
-            data2021[i] = 0;
-        }
-        //2022
-        for(int i = 0; i < 288*365; i++) {
-            data2022[i] = 0;
-        }
-        
-    }
-    
-
-    // sostituisco i giorni di festa con sabati e domeniche
-    @Override
-    protected int festeEditValue(String date, int val, int instant, float modifier) {
-
-        if (modifier == 0)
-            return val;
-        
-        int dayOfWeek;
-        if (date.hashCode() % 2 == 0)
-            dayOfWeek = Calendar.SATURDAY;
-        else
-            dayOfWeek = Calendar.SUNDAY;
-        
-        int week = Math.abs( date.hashCode() % WeeklyRawData.getInstance().size() );
-        return WeeklyRawData.getInstance().get(week).getDayOfWeek(dayOfWeek)[instant];
+    protected int[] getUsableDays() {
+        return usableDays;
     }
 
-    // imposto l' effetto della pioggia 
     @Override
-    protected int meteoEditValue(String date, int flow, int instant, float modifier) {
-        return Math.round(flow / (modifier*100+1) + flow/getIndiceMeteo());
-    }
+    public int getSeed() { return 5; }
 
-    //imposto l'effetto delle stagioni
-    @Override
-    protected int seasonEditValue(int dayOfYear, int flow, int instant) {
-        int shifted = Math.abs(dayOfYear-183);
-        double seasonMultiplier = 0.8 + getIndiceStagione()/10 * (Math.cos(shifted*Math.PI/183*2)/2 - Math.abs(shifted)/400d);
-        return (int)Math.round(seasonMultiplier*flow);
-    }
-
-    //imposto l'effetto delle stagioni
+    //imposto l'effetto degli eventi
     @Override
     protected int eventiEditValue(int flow, float modifier) {
-        return flow;
+        return Math.round((modifier+getIndiceEventi())*flow/getIndiceEventi());
     }
 
     //imposto l'effetto delle attività
     @Override
     protected int attivitaEditValue(int flow, float modifier) {
-        return Math.round((modifier+getIndiceAttivita())*flow/getIndiceAttivita());
+        return flow; // non ha attività la Fiera!!
     }
 
     
@@ -111,19 +48,19 @@ public class Fiera extends SimulatedSource {
     }
     @Override
     public float getIndiceMeteo() {
-        return 0.2f;
+        return 0.5f;
     }
     @Override
     public float getIndiceStagione() {
-        return 4;
+        return 1.5f;
     }
     @Override
     public float getIndiceAttivita() {
-        return 4;
+        return 1;
     }
     @Override
     public float getIndiceEventi() {
-        return 1;
+        return 1.2f;
     }
 
 }

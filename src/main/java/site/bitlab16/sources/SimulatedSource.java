@@ -36,7 +36,7 @@ public abstract class SimulatedSource {
     private static final SimpleDateFormat dateFormat;
 
     // tabelle statiche festività, meteo, ...
-    protected static float[] modifierMeteo;
+    protected static float[] dataMeteo;
     protected static ConcentrationModifier dataFestivita;
     protected ConcentrationModifier dataAttivita; // NON STATICO! DIPENDE DALLA SORGENTE!
     protected ConcentrationModifier dataEventi; // NON STATICO! DIPENDE DALLA SORGENTE!
@@ -45,7 +45,7 @@ public abstract class SimulatedSource {
         end = new GregorianCalendar(2022, Calendar.DECEMBER, 31);
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        modifierMeteo = new float[len_18_19_20_21_22];
+        dataMeteo = new float[len_18_19_20_21_22];
         dataFestivita = new ConcentrationModifier();
         try (
             Stream<String> festivitaStream = Files.lines(new File("data/festivita.csv").toPath());
@@ -56,8 +56,8 @@ public abstract class SimulatedSource {
             });
             String linesMeteo[] = meteoStream.toArray(String[]::new);
             for (int i = 0; i < len_18_19_20_21_22/2; i++) {
-                modifierMeteo[i*2] = Float.parseFloat(linesMeteo[i]);
-                modifierMeteo[i*2+1] = Float.parseFloat(linesMeteo[i]);
+                dataMeteo[i*2] = Float.parseFloat(linesMeteo[i]);
+                dataMeteo[i*2+1] = Float.parseFloat(linesMeteo[i]);
             }
 
         } catch (IOException e) {
@@ -179,19 +179,19 @@ public abstract class SimulatedSource {
         int x1 = Math.min(offset+50, len_18_19_20_21_22);
         float cumulative = 0f;
         for (int j = x0; j < x1; j++)
-            cumulative += modifierMeteo[j];
+            cumulative += dataMeteo[j];
         ret += cumulative/(x1-x0);
         x0 = Math.max(offset-100, 0);
         x1 = Math.min(offset-50, len_18_19_20_21_22);
         cumulative = 0f;
         for (int j = x0; j < x1; j++)
-            cumulative += modifierMeteo[j];
+            cumulative += dataMeteo[j];
         ret += cumulative/(x1-x0)/2;
         x0 = Math.max(offset+50, 0);
         x1 = Math.min(offset+100, len_18_19_20_21_22);
         cumulative = 0f;
         for (int j = x0; j < x1; j++)
-            cumulative += modifierMeteo[j];
+            cumulative += dataMeteo[j];
         ret += cumulative/(x1-x0)/2;
         return ret;
     }
