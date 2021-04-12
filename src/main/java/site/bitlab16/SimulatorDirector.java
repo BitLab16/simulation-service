@@ -33,10 +33,10 @@ public class SimulatorDirector {
         builder.reset();
         builder.setSimulatorType(type);
         builder.setSimulatedSource(new SimulatedSource[] {
-            Paolotti.getInstance(),
+            /*Paolotti.getInstance(),
             Prato.getInstance(),
             Garibaldi.getInstance(),
-            Supermercato.getInstance()
+            */Supermercato.getInstance()
         });
         return builder.build();
     }

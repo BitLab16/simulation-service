@@ -4,65 +4,58 @@ import java.util.Calendar;
 
 import site.bitlab16.sources.SimulatedSource;
 import site.bitlab16.sources.WeeklyRawData;
-import site.bitlab16.sources.WeeklyRawData.WeekDayIterator;
+import site.bitlab16.sources.WeeklyRawData.SpecificWeekDayIterator;
 
-public class Prato extends SimulatedSource {
+public class Fiera extends SimulatedSource {
 
     /* CREATION */
 
     private static SimulatedSource instance;
     public static SimulatedSource getInstance() {
         if (instance == null)
-            instance = new Prato();
+            instance = new Fiera();
         return instance;
     }
-    protected Prato() {
-        baseMultiplier = 1.2f;
+    protected Fiera() {
+        baseMultiplier = 0.05f;
     }
 
     /* METHODS */
 
     @Override
-    public int getSeed() { return 2; }
+    public int getSeed() { return 4; }
 
-
-    private int curva1(int val, int i) {
-        if (i>100 && i<=110)
-            return val+5;
-        if (i>110 && i <=120)
-            return val+10;
-        if (i>120 && i<=180)
-            return val+15;
-        if (i>180 && i <=190)
-            return val+10;
-        if (i>190 && i <=200)
-            return val+5;
-        return val;
-    }
 
     @Override
     protected void generateData() {
         
-        WeekDayIterator iterator = new WeekDayIterator(random);
+        //confronto un sabaato e una domanic arandom per farne la somma.
+        //considero tutti i giorni sabati-domeniche
+        SpecificWeekDayIterator iterator = new SpecificWeekDayIterator(random);
+        int[] day1;
+        int[] day2;
         //2018
-        for(int i = 0; i < 288*365; i++) {
-                data2018[i] = curva1(iterator.getAndAdvance(), i%288);
+        for(int i = 0; i < 365; i++) {
+            day1 = iterator.getDayOfWeek(Calendar.MONDAY);
+            day2 = iterator.getDayOfWeek(Calendar.SUNDAY);
+            for (int instant = 0; instant < 288; instant++)
+                data2018[i*288+instant] = day1[instant] + day2[instant];
         }
         //2019
         for(int i = 0; i < 288*365; i++) {
-                data2019[i] = curva1(iterator.getAndAdvance(), i%288);
+            data2019[i] = 0;
         }
         //2020
         for(int i = 0; i < 288*366; i++) {
-                data2020[i] = curva1(iterator.getAndAdvance(), i%288);
+            data2020[i] = 0;
         }
         //2021
         for(int i = 0; i < 288*365; i++) {
-                data2021[i] = curva1(iterator.getAndAdvance(), i%288);
+            data2021[i] = 0;
         }
         //2022
         for(int i = 0; i < 288*365; i++) {
-                data2022[i] = curva1(iterator.getAndAdvance(), i%288);
+            data2022[i] = 0;
         }
         
     }
@@ -102,7 +95,7 @@ public class Prato extends SimulatedSource {
     //imposto l'effetto delle stagioni
     @Override
     protected int eventiEditValue(int flow, float modifier) {
-        return Math.round((modifier+getIndiceEventi())*flow/getIndiceEventi());
+        return flow;
     }
 
     //imposto l'effetto delle attività
@@ -118,19 +111,19 @@ public class Prato extends SimulatedSource {
     }
     @Override
     public float getIndiceMeteo() {
-        return 3;
+        return 0.2f;
     }
     @Override
     public float getIndiceStagione() {
-        return 1.5f;
+        return 4;
     }
     @Override
     public float getIndiceAttivita() {
-        return 3.5f;
+        return 4;
     }
     @Override
     public float getIndiceEventi() {
-        return 1f;
+        return 1;
     }
 
 }

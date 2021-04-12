@@ -118,19 +118,19 @@ public class Garibaldi extends SimulatedSource {
     }
     @Override
     public float getIndiceMeteo() {
-        return 2;
+        return 1.5f;
     }
     @Override
     public float getIndiceStagione() {
-        return 3;
+        return 2;
     }
     @Override
     public float getIndiceAttivita() {
-        return 5;
+        return 1;
     }
     @Override
     public float getIndiceEventi() {
-        return 2;
+        return 2f;
     }
 
 }

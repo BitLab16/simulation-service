@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -58,6 +59,22 @@ public class WeeklyRawData {
             if (++instant == week.length)
                 reset();
             return flow;
+        }
+
+    }
+    /**
+     * Iteratore per andare a istanziare gli array contenenti i flow dei vari anni
+     */
+    public static class SpecificWeekDayIterator {
+        protected Random random;
+        final WeeklyRawData weeks;
+        public SpecificWeekDayIterator(Random random) {
+            weeks = WeeklyRawData.getInstance();
+            this.random = random;
+        }
+        public int[] getDayOfWeek(int day) {
+            int selectedWeek = random.nextInt(weeks.size());
+            return weeks.get(selectedWeek).getDayOfWeek(day);
         }
 
     }

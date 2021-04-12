@@ -103,7 +103,7 @@ public class Paolotti extends SimulatedSource { // PAOLOTTI
     }
     @Override
     public float getIndiceMeteo() {
-        return 0.5f;
+        return 1;
     }
     @Override
     public float getIndiceStagione() {
@@ -111,7 +111,7 @@ public class Paolotti extends SimulatedSource { // PAOLOTTI
     }
     @Override
     public float getIndiceAttivita() {
-        return 2;
+        return .5f;
     }
     @Override
     public float getIndiceEventi() {
