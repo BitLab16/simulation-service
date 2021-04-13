@@ -16,7 +16,7 @@ public class App {
         CSV
     }
     
-    final public static ApplicationScope BUILD_MODE = ApplicationScope.DEBUG;
+    final public static ApplicationScope BUILD_MODE = ApplicationScope.CSV;
 
     
     public static void main( String[] args ) {

@@ -42,10 +42,10 @@ public class CSVSimulator extends BasicSimulator {
                 line += (sources[i].getEventi(when)==0 ? 0 : 1) + ",";
                 line += (sources[i].getAttivita(when)==0 ? 0 : 1) + ",";
                 line += (sources[i].getFestivita(when)==0 ? 0 : 1) + ",";
-                line += 3 + ",";
-                line += 3 + ",";
-                line += 4 + ",";
-                line += 2 + ",";
+                line += sources[i].getIndiceMeteo() + ",";
+                line += sources[i].getIndiceAttivita() + ",";
+                line += sources[i].getIndiceEventi() + ",";
+                line += sources[i].getIndiceOrario() + ",";
                 line += flow;
                 outfile.add(line);
             }
