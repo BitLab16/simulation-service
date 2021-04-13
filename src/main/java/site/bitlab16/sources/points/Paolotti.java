@@ -10,16 +10,11 @@ public class Paolotti extends SimulatedSource { // PAOLOTTI
 
     /* CREATION */
 
-    private static SimulatedSource instance;
-    public static SimulatedSource getInstance() {
-        if (instance == null)
-            instance = new Paolotti();
-        return instance;
-    }
-    protected Paolotti() {
+    public Paolotti() {
         baseMultiplier = 0.2f;
     }
 
+    
     /* METHODS */
 
     @Override

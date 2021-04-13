@@ -34,11 +34,11 @@ public class SimulatorDirector {
         builder.reset();
         builder.setSimulatorType(type);
         builder.setSimulatedSource(new SimulatedSource[] {
-            Paolotti.getInstance(),
-            Prato.getInstance(),
-            Garibaldi.getInstance(),
-            Supermercato.getInstance(),
-            Fiera.getInstance()
+             new Paolotti(),
+             new Prato(),
+             new Garibaldi(),
+             new Supermercato(),
+             new Fiera()
         });
         return builder.build();
     }

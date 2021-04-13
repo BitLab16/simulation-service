@@ -10,15 +10,10 @@ public class Prato extends SimulatedSource {
 
     /* CREATION */
 
-    private static SimulatedSource instance;
-    public static SimulatedSource getInstance() {
-        if (instance == null)
-            instance = new Prato();
-        return instance;
-    }
-    protected Prato() {
+    public Prato() {
         baseMultiplier = 1.2f;
     }
+
 
     /* METHODS */
 

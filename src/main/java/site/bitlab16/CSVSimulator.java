@@ -1,9 +1,5 @@
 package site.bitlab16;
 
-import org.jfree.data.time.Minute;
-import org.jfree.data.time.TimeSeries;
-import site.bitlab16.sources.SimulatedSource;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,8 +9,6 @@ import java.util.GregorianCalendar;
 public class CSVSimulator extends BasicSimulator {
 
     String outputFileName = "data.csv";
-
-    public CSVSimulator(){}
 
     @Override
     public void writeOutput() {

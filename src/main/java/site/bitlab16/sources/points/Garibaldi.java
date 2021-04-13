@@ -10,16 +10,11 @@ public class Garibaldi extends SimulatedSource {
 
     /* CREATION */
 
-    private static SimulatedSource instance;
-    public static SimulatedSource getInstance() {
-        if (instance == null)
-            instance = new Garibaldi();
-        return instance;
-    }
-    protected Garibaldi() {
+    public Garibaldi() {
         baseMultiplier = 0.8f;
     }
 
+    
     /* METHODS */
 
     @Override

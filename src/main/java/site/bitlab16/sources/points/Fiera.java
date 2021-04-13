@@ -8,16 +8,11 @@ public class Fiera extends PuntoAllAperto {
 
     /* CREATION */
 
-    private static SimulatedSource instance;
-    public static SimulatedSource getInstance() {
-        if (instance == null)
-            instance = new Fiera();
-        return instance;
-    }
-    protected Fiera() {
+    public Fiera() {
         baseMultiplier = 0.12f;
     }
 
+    
     /* METHODS */
 
     static final int[] usableDays = {Calendar.SATURDAY, Calendar.SATURDAY};

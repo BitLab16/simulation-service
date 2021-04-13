@@ -8,16 +8,11 @@ public class Supermercato extends PuntoAllAperto {
 
     /* CREATION */
 
-    private static SimulatedSource instance;
-    public static SimulatedSource getInstance() {
-        if (instance == null)
-            instance = new Supermercato();
-        return instance;
-    }
-    protected Supermercato() {
+    public Supermercato() {
         baseMultiplier = 0.012f;
     }
 
+    
     /* METHODS */
 
     static final int[] usableDays = {Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY};
