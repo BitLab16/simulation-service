@@ -1,5 +1,6 @@
 package site.bitlab16;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.concurrent.BlockingDeque;
@@ -41,8 +42,8 @@ public class KafkaSimulator extends BasicSimulator {
                 int flow = sources[i].getValue(when);
                 if (flow != -1) {
                     outQueue.add(new SourceRecord(1L,
-                            when,
                             flow,
+                            new Timestamp(when.getTimeInMillisecond()),
                             meteoAsEnum,
                             seasons[when.getDay().get(Calendar.MONTH)],
                             sources[i].getFestivita(when)==0 ? false : true,
