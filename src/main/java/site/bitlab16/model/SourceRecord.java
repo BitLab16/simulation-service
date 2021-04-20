@@ -37,4 +37,8 @@ public class SourceRecord {
         this.seasonIndex = seasonIndex;
         this.attractionsIndex = attractionsIndex;
     }
+
+    public Timestamp getDetectionTime() {
+        return detectionTime;
+    }
 }
