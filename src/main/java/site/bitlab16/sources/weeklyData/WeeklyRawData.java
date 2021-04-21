@@ -1,4 +1,4 @@
-package site.bitlab16.sources;
+package site.bitlab16.sources.weeklyData;
 
 import java.io.File;
 import java.io.IOException;

@@ -33,12 +33,13 @@ public class SimulatorDirector {
         }
         builder.reset();
         builder.setSimulatorType(type);
+
         builder.setSimulatedSource(new SimulatedSource[] {
-             new Paolotti(),
+             new Paolotti()/*,
              new Prato(),
              new Garibaldi(),
              new Supermercato(),
-             new Fiera()
+             new Fiera()*/
         });
         return builder.build();
     }

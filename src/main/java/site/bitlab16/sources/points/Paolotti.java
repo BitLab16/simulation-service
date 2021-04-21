@@ -3,8 +3,8 @@ package site.bitlab16.sources.points;
 import java.util.Calendar;
 
 import site.bitlab16.sources.SimulatedSource;
-import site.bitlab16.sources.WeeklyRawData;
-import site.bitlab16.sources.WeeklyRawData.WeekDayIterator;
+import site.bitlab16.sources.weeklyData.WeeklyRawData;
+import site.bitlab16.sources.weeklyData.WeeklyRawData.WeekDayIterator;
 
 public class Paolotti extends SimulatedSource { // PAOLOTTI
 

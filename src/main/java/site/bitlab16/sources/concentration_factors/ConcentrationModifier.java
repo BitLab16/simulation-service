@@ -1,10 +1,31 @@
-package site.bitlab16.sources;
+package site.bitlab16.sources.concentration_factors;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class ConcentrationModifier {
+    
+    
+    /**
+     * Mappa che associa una data (rappresentata come stringa) ad una lista di DailyTimeFrame
+     */
+    private final Map<String, ArrayList<DailyTimeFrame> > modifiers = new HashMap<>();
+
+    public ConcentrationModifier(final String filename) {
+        try ( Stream<String> fileStream = Files.lines(new File(filename).toPath()) ) {
+            fileStream.forEach( line -> {
+                String[] s = line.split(",");
+                add(s[0], 12*Integer.parseInt(s[1]), 12*Integer.parseInt(s[2]), Integer.parseInt(s[3]));
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Classe che rappresenta un arco temporale con assegnato un valore
@@ -25,14 +46,6 @@ public class ConcentrationModifier {
 
     }
     
-    /**
-     * Mappa che associa una data (rappresentata come stringa) ad una lista di DailyTimeFrame
-     */
-    Map<String, ArrayList<DailyTimeFrame> > modifiers = new HashMap<>();
-
-    public void add(String day1, String day2, int start, int end) {
-        //aggiungere con for loop
-    }
     public void add(String day, int start, int end, float val) {
         modifiers.computeIfAbsent(day, key -> new ArrayList<DailyTimeFrame>() );
         modifiers.get(day).add(new DailyTimeFrame(start, end, val));

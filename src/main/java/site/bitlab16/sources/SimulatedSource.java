@@ -1,20 +1,18 @@
 package site.bitlab16.sources;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
-import java.util.stream.Stream;
 
 import com.workday.insights.timeseries.arima.Arima;
 import com.workday.insights.timeseries.arima.struct.ArimaParams;
 import com.workday.insights.timeseries.arima.struct.ForecastResult;
 
 import site.bitlab16.TimeInstant;
+import site.bitlab16.sources.concentration_factors.ConcentrationModifier;
+import site.bitlab16.sources.concentration_factors.WeatherStatus;
 
 /**
  * CLASSE ASTRATTA CHE RAPPRESENTA LA SORGENTE DATI
@@ -36,33 +34,17 @@ public abstract class SimulatedSource {
     private static final SimpleDateFormat dateFormat;
 
     // tabelle statiche festività, meteo, ...
-    protected static float[] dataMeteo;
-    protected static ConcentrationModifier dataFestivita;
-    protected ConcentrationModifier dataAttivita; // NON STATICO! DIPENDE DALLA SORGENTE!
-    protected ConcentrationModifier dataEventi; // NON STATICO! DIPENDE DALLA SORGENTE!
+    protected static WeatherStatus dataMeteo;
+    protected static ConcentrationModifier dataFestivita = new ConcentrationModifier("data/festivita.csv");
+    protected ConcentrationModifier dataAttivita = new ConcentrationModifier("data/attivita_source" + getSeed() + ".csv");
+    protected ConcentrationModifier dataEventi = new ConcentrationModifier("data/eventi_source" + getSeed() + ".csv");
     static {
         start = new GregorianCalendar(2018, Calendar.JANUARY, 1);
         end = new GregorianCalendar(2022, Calendar.DECEMBER, 31);
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        dataMeteo = new float[len_18_19_20_21_22];
-        dataFestivita = new ConcentrationModifier();
-        try (
-            Stream<String> festivitaStream = Files.lines(new File("data/festivita.csv").toPath());
-            Stream<String> meteoStream = Files.lines(new File("data/meteo.csv").toPath());
-        ) {
-            festivitaStream.forEach( (day) -> {
-                dataFestivita.add(day, 0, 287, 1);
-            });
-            String linesMeteo[] = meteoStream.toArray(String[]::new);
-            for (int i = 0; i < len_18_19_20_21_22/2; i++) {
-                dataMeteo[i*2] = Float.parseFloat(linesMeteo[i]);
-                dataMeteo[i*2+1] = Float.parseFloat(linesMeteo[i]);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        dataMeteo = new WeatherStatus("data/meteo.csv", len_18_19_20_21_22);
+        
 
     }
 
@@ -82,25 +64,6 @@ public abstract class SimulatedSource {
     
     protected SimulatedSource() {
         random = new Random(getSeed());
-        
-        dataEventi = new ConcentrationModifier();
-        dataAttivita = new ConcentrationModifier();
-        try (
-            Stream<String> eventiStream = Files.lines(new File("data/eventi_source" + getSeed() + ".csv").toPath() );
-            Stream<String> attivitaStream = Files.lines(new File("data/attivita_source" + getSeed() + ".csv").toPath() );
-        ) {
-            eventiStream.forEach( line -> {
-                String[] s = line.split(",");
-                dataEventi.add(s[0], 12*Integer.parseInt(s[1]), 12*Integer.parseInt(s[2]), Integer.parseInt(s[3]));
-            });
-            attivitaStream.forEach( line -> {
-                String[] s = line.split(",");
-                dataAttivita.add(s[0], 12*Integer.parseInt(s[1]), 12*Integer.parseInt(s[2]), Integer.parseInt(s[3]));
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         generateData();
         applyModifiers();
     }
@@ -146,54 +109,7 @@ public abstract class SimulatedSource {
         return dataFestivita.get(dateFormat.format(when.getDay().getTime()), when.getInstant());
     }
     public final int getModifierMeteoAsEnum(TimeInstant when) {
-        float modifier = getModifierMeteo(when);
-        if (modifier < 0.05)
-            return 0;
-        if(modifier < 0.13)
-            return 1;
-        if(modifier < 0.2)
-            return 2;
-        if(modifier < 0.3)
-            return 3;
-        if(modifier < 0.5)
-            return 4;
-        return 5;
-    }
-    public float getModifierMeteo(TimeInstant when) {
-        int offset = 0;
-        int year = when.getDay().get(Calendar.YEAR);
-        switch (year) {
-            case 2022: offset += 288*365*3 + 288*366; break; //add 2021
-            case 2021: offset += 288*366 + 288*365*2; break; //add 2020
-            case 2020: offset += 288*365*2; break; //add 2019
-            case 2019: offset += 288*365; break; //add 2018
-            default: break;
-        }
-        offset += (when.getDay().get(Calendar.DAY_OF_YEAR)-1)*288;
-        offset += when.getInstant();
-        return getModifierMeteo(offset);
-    }
-    private float getModifierMeteo(int offset) {
-        float ret = 0f;
-        int x0 = Math.max(offset-50, 0);
-        int x1 = Math.min(offset+50, len_18_19_20_21_22);
-        float cumulative = 0f;
-        for (int j = x0; j < x1; j++)
-            cumulative += dataMeteo[j];
-        ret += cumulative/(x1-x0);
-        x0 = Math.max(offset-100, 0);
-        x1 = Math.min(offset-50, len_18_19_20_21_22);
-        cumulative = 0f;
-        for (int j = x0; j < x1; j++)
-            cumulative += dataMeteo[j];
-        ret += cumulative/(x1-x0)/2;
-        x0 = Math.max(offset+50, 0);
-        x1 = Math.min(offset+100, len_18_19_20_21_22);
-        cumulative = 0f;
-        for (int j = x0; j < x1; j++)
-            cumulative += dataMeteo[j];
-        ret += cumulative/(x1-x0)/2;
-        return ret;
+        return dataMeteo.asEnum(when);
     }
     protected abstract void generateData();
     private void applyModifiers() {
@@ -208,7 +124,7 @@ public abstract class SimulatedSource {
             instant = i % 288;
             offset = (when.get(Calendar.DAY_OF_YEAR)-1)*288 + instant;
             float modifierFeste = dataFestivita.get(date, instant);
-            float modifierMeteo = getModifierMeteo(i);
+            float modifierMeteo = dataMeteo.getModifierMeteo(i);
             float modifierEventi = 0;
             for (int k = -8; k < 12; k++)
                 modifierEventi += dataEventi.get(date, instant+k);
