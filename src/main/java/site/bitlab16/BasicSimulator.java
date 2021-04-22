@@ -1,7 +1,6 @@
 package site.bitlab16;
 
 import site.bitlab16.datasources.BasicSource;
-import site.bitlab16.datasources.SimulatedSource;
 
 public class BasicSimulator {
 

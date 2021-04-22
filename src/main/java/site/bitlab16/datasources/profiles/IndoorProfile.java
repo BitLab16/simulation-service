@@ -5,11 +5,12 @@ import java.util.Random;
 import site.bitlab16.TimeInstant;
 import site.bitlab16.datasources.BasicSource;
 import site.bitlab16.datasources.SourceValuesEditor;
+import site.bitlab16.datasources.weeklyData.WeeklyRawData;
 import site.bitlab16.datasources.weeklyData.WeeklyRawData.SpecificWeekDayIterator;
 
 public class IndoorProfile implements BasicSource, SourceValuesEditor {
 
-    TypicalDataSource basicSource;
+    private final TypicalDataSource basicSource;
 
     public IndoorProfile (
         final int seed,
@@ -18,7 +19,8 @@ public class IndoorProfile implements BasicSource, SourceValuesEditor {
         final float indiceStagione, 
         final float indiceEventi,
         final float indiceAttivita,
-        final int[] usableDays) {
+        final int[] usableDays,
+        final WeeklyRawData wrd) {
 
         int[][] data = new int[5][];
         data[0] = new int[288*365]; // 2018
@@ -26,7 +28,7 @@ public class IndoorProfile implements BasicSource, SourceValuesEditor {
         data[2] = new int[288*366]; // 2020 leap year
         data[3] = new int[288*365]; // 2021
         data[4] = new int[288*365]; // 2022
-        SpecificWeekDayIterator iterator = new SpecificWeekDayIterator(new Random(seed));
+        SpecificWeekDayIterator iterator = new SpecificWeekDayIterator(wrd, new Random(seed));
         int[] day;
         //2018
         for(int i = 0; i < 365; i++) {

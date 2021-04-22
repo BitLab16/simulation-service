@@ -11,7 +11,8 @@ import site.bitlab16.datasources.weeklyData.WeeklyRawData.WeekDayIterator;
 
 public class OutdoorProfile implements BasicSource, SourceValuesEditor {
 
-    TypicalDataSource basicSource;
+    private final TypicalDataSource basicSource;
+    private final WeeklyRawData wrd;
 
     public OutdoorProfile (
         final int seed,
@@ -19,7 +20,10 @@ public class OutdoorProfile implements BasicSource, SourceValuesEditor {
         final float indiceMeteo,
         final float indiceStagione, 
         final float indiceEventi,
-        final float indiceAttivita) {
+        final float indiceAttivita,
+        final WeeklyRawData wrd) {
+
+        this.wrd = wrd;
 
         int[][] data = new int[5][];
         data[0] = new int[288*365]; // 2018
@@ -28,7 +32,7 @@ public class OutdoorProfile implements BasicSource, SourceValuesEditor {
         data[3] = new int[288*365]; // 2021
         data[4] = new int[288*365]; // 2022
         
-        WeekDayIterator iterator = new WeekDayIterator(new Random(seed));
+        WeekDayIterator iterator = new WeekDayIterator(wrd, new Random(seed));
         for(int i = 0; i < 288*365; i++) // 2018
                 data[0][i] = roundTheMiddle(iterator.getAndAdvance(), i%288);
         for(int i = 0; i < 288*365; i++) // 2019
@@ -57,8 +61,8 @@ public class OutdoorProfile implements BasicSource, SourceValuesEditor {
         else
             dayOfWeek = Calendar.SUNDAY;
         
-        int week = Math.abs( date.hashCode() % WeeklyRawData.getInstance().size() );
-        return WeeklyRawData.getInstance().get(week).getDayOfWeek(dayOfWeek)[instant];
+        int week = Math.abs( date.hashCode() % wrd.size() );
+        return wrd.get(week).getDayOfWeek(dayOfWeek)[instant];
     }
 
     @Override

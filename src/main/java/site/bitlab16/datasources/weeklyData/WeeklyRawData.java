@@ -11,13 +11,7 @@ import java.util.stream.Stream;
 public class WeeklyRawData {
 
     private static WeeklyRawData instance = null;
-    private static final Random random = new Random(10203040);
 
-    public static WeeklyRawData getInstance() {
-        if (instance == null)
-            instance = new WeeklyRawData();
-        return instance;
-    }
 
     public class Week {
 
@@ -43,8 +37,8 @@ public class WeeklyRawData {
         final WeeklyRawData weeks;
         int[] week;
         int instant;
-        public WeekDayIterator(Random random) {
-            weeks = WeeklyRawData.getInstance();
+        public WeekDayIterator(final WeeklyRawData wrd, final Random random) {
+            weeks = wrd;
             this.random = random;
             reset();
         }
@@ -67,11 +61,11 @@ public class WeeklyRawData {
     public static class SpecificWeekDayIterator {
         protected Random random;
         final WeeklyRawData weeks;
-        public SpecificWeekDayIterator(Random random) {
-            weeks = WeeklyRawData.getInstance();
+        public SpecificWeekDayIterator(final WeeklyRawData wrd, final Random random) {
+            weeks = wrd;
             this.random = random;
         }
-        public int[] getDayOfWeek(int day) {
+        public int[] getDayOfWeek(final int day) {
             int selectedWeek = random.nextInt(weeks.size());
             return weeks.get(selectedWeek).getDayOfWeek(day);
         }
@@ -81,13 +75,13 @@ public class WeeklyRawData {
 
     private ArrayList<Week> data = new ArrayList<>();
     
-    private WeeklyRawData() {
-        int i;
+    public WeeklyRawData() {
+        final Random random = new Random(10203040);
         for (int filenum = 1; filenum < 101; filenum++) {
             int weekData[] = new int[288*7];
             try ( Stream<String> lineStream =  Files.lines(new File("data/weeks/week" + filenum + ".csv").toPath()) ) {
                 String[] lines = lineStream.toArray(String[]::new);
-                for(i = 0; i < lines.length; i++) {
+                for(int i = 0; i < lines.length; i++) {
                     int flow = getFlow(lines, i);
                     int flowNext =  getFlow(lines, i+1);
                     float slope = (flowNext-flow)/12f;
