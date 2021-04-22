@@ -1,4 +1,4 @@
-package site.bitlab16.datasources.profiles2;
+package site.bitlab16.datasources.profiles;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

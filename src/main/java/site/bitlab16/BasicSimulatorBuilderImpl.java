@@ -1,6 +1,6 @@
 package site.bitlab16;
 
-import site.bitlab16.datasources.SimulatedSource;
+import site.bitlab16.datasources.BasicSource;
 
 public class BasicSimulatorBuilderImpl implements SimulatorBuilder<String> {
 
@@ -17,7 +17,7 @@ public class BasicSimulatorBuilderImpl implements SimulatorBuilder<String> {
     }
 
     @Override
-    public void setSimulatedSource(SimulatedSource[] sources) {
+    public void setSimulatedSource(BasicSource[] sources) {
         simulator.setSources(sources);
     }
 

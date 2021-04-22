@@ -1,12 +1,13 @@
 package site.bitlab16;
 
+import site.bitlab16.datasources.BasicSource;
 import site.bitlab16.datasources.SimulatedSource;
 
 public class BasicSimulator {
 
     protected SimulatorType type;
 
-    protected SimulatedSource sources[];
+    protected BasicSource sources[];
 
     public BasicSimulator(){}
 
@@ -18,11 +19,11 @@ public class BasicSimulator {
         this.type = type;
     }
 
-    public SimulatedSource[] getSources() {
+    public BasicSource[] getSources() {
         return sources;
     }
 
-    public void setSources(SimulatedSource[] sources) {
+    public void setSources(BasicSource[] sources) {
         this.sources = sources;
     }
 

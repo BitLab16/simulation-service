@@ -1,9 +1,9 @@
 package site.bitlab16;
 
-import site.bitlab16.datasources.SimulatedSource;
-import site.bitlab16.model.SourceRecord;
-
 import java.util.concurrent.BlockingDeque;
+
+import site.bitlab16.datasources.BasicSource;
+import site.bitlab16.model.SourceRecord;
 
 public class KafkaSimulatorBuilderImpl implements SimulatorBuilder<BlockingDeque<SourceRecord>>{
 
@@ -20,7 +20,7 @@ public class KafkaSimulatorBuilderImpl implements SimulatorBuilder<BlockingDeque
     }
 
     @Override
-    public void setSimulatedSource(SimulatedSource[] sources) {
+    public void setSimulatedSource(BasicSource[] sources) {
         kafkaSimulator.setSources(sources);
     }
 

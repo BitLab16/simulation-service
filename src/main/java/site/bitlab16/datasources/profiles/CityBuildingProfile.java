@@ -1,24 +1,25 @@
-package site.bitlab16.datasources.profiles2;
+package site.bitlab16.datasources.profiles;
 
+import java.util.Calendar;
 import java.util.Random;
 
 import site.bitlab16.TimeInstant;
 import site.bitlab16.datasources.BasicSource;
 import site.bitlab16.datasources.SourceValuesEditor;
-import site.bitlab16.datasources.weeklyData.WeeklyRawData.SpecificWeekDayIterator;
+import site.bitlab16.datasources.weeklyData.WeeklyRawData;
+import site.bitlab16.datasources.weeklyData.WeeklyRawData.WeekDayIterator;
 
-public class IndoorProfile implements BasicSource, SourceValuesEditor {
+public class CityBuildingProfile implements BasicSource, SourceValuesEditor {
 
     TypicalDataSource basicSource;
 
-    public IndoorProfile (
+    public CityBuildingProfile (
         final int seed,
         final float baseMultiplier,
         final float indiceMeteo,
         final float indiceStagione, 
         final float indiceEventi,
-        final float indiceAttivita,
-        final int[] usableDays) {
+        final float indiceAttivita) {
 
         int[][] data = new int[5][];
         data[0] = new int[288*365]; // 2018
@@ -26,58 +27,44 @@ public class IndoorProfile implements BasicSource, SourceValuesEditor {
         data[2] = new int[288*366]; // 2020 leap year
         data[3] = new int[288*365]; // 2021
         data[4] = new int[288*365]; // 2022
-        SpecificWeekDayIterator iterator = new SpecificWeekDayIterator(new Random(seed));
-        int[] day;
-        //2018
-        for(int i = 0; i < 365; i++) {
-            day = getInputDay(iterator, usableDays);
-            for (int instant = 0; instant < 288; instant++)
-                data[0][i*288+instant] = day[instant]-usableDays.length;
-        }
-        //2019
-        for(int i = 0; i < 365; i++) {
-            day = getInputDay(iterator, usableDays);
-            for (int instant = 0; instant < 288; instant++)
-                data[1][i*288+instant] = day[instant]-usableDays.length;
-        }
-        //2020
-        for(int i = 0; i < 366; i++) {
-            day = getInputDay(iterator, usableDays);
-            for (int instant = 0; instant < 288; instant++)
-                data[2][i*288+instant] = day[instant]-usableDays.length;
-        }
-        //2021
-        for(int i = 0; i < 365; i++) {
-            day = getInputDay(iterator, usableDays);
-            for (int instant = 0; instant < 288; instant++)
-                data[3][i*288+instant] = day[instant]-usableDays.length;
-        }
-        //2022
-        for(int i = 0; i < 365; i++) {
-            day = getInputDay(iterator, usableDays);
-            for (int instant = 0; instant < 288; instant++)
-                data[4][i*288+instant] = day[instant]-usableDays.length;
-        }
+        WeekDayIterator iterator = new WeekDayIterator(new Random(seed));
+        for(int i = 0; i < 288*365; i++) // 2018
+                data[0][i] = iterator.getAndAdvance();
+        for(int i = 0; i < 288*365; i++) //2019
+            data[1][i] = iterator.getAndAdvance();
+        for(int i = 0; i < 288*366; i++) // 2020
+                data[2][i] = iterator.getAndAdvance();
+        for(int i = 0; i < 288*365; i++) //2021
+            data[3][i] = iterator.getAndAdvance();
+        for(int i = 0; i < 288*365; i++) // 2022
+            data[4][i] = iterator.getAndAdvance();
 
         basicSource = new TypicalDataSource(data, seed, baseMultiplier, indiceMeteo, indiceStagione, indiceEventi, indiceAttivita);
         basicSource.applyModifiers(this);
     }
 
-    // ingrosso un po' le festività
     @Override
     public int festeEditValue(String date, int val, int instant, float modifier) {
-        return Math.round(val*1.4f);
+        if (modifier == 0)
+            return val;
+        int dayOfWeek;
+        if (date.hashCode() % 2 == 0)
+            dayOfWeek = Calendar.SATURDAY;
+        else
+            dayOfWeek = Calendar.SUNDAY;
+        int week = Math.abs( date.hashCode() % WeeklyRawData.getInstance().size() );
+        return WeeklyRawData.getInstance().get(week).getDayOfWeek(dayOfWeek)[instant];
     }
 
     @Override
     public int meteoEditValue(String date, int flow, int instant, float modifier) {
-        return Math.round(flow / (modifier*110+1) + flow/getIndiceMeteo());
+        return Math.round(flow / (modifier*100+1) + flow/getIndiceMeteo());
     }
 
     @Override
     public int seasonEditValue(int dayOfYear, int flow, int instant) {
         int shifted = Math.abs(dayOfYear-183);
-        double seasonMultiplier = 0.8 + getIndiceStagione()/10 * (Math.cos(shifted*Math.PI/183*2)/2 - Math.abs(shifted)/400d);
+        double seasonMultiplier = 1 + getIndiceStagione()/10 * (Math.cos(shifted*Math.PI/183*2)/2 - Math.abs(shifted)/400d);
         return (int)Math.round(seasonMultiplier*flow);
     }
 
@@ -114,15 +101,4 @@ public class IndoorProfile implements BasicSource, SourceValuesEditor {
     @Override
     public float getIndiceStagione() { return basicSource.getIndiceStagione(); }
     
-
-    private int[] getInputDay(final SpecificWeekDayIterator iterator, final int[] usableDay) {
-        int[] sum = new int[288];
-        int[] day;
-        for (int selectedDay : usableDay) {
-            day = iterator.getDayOfWeek(selectedDay);
-            for (int i = 0; i < 288; i++)
-                sum[i] += day[i];
-        }
-        return sum;
-    }
 }

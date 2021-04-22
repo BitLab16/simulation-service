@@ -17,11 +17,6 @@ import org.jfree.data.time.Minute;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
-import site.bitlab16.datasources.BasicSource;
-import site.bitlab16.datasources.profiles2.CityBuildingProfile;
-import site.bitlab16.datasources.profiles2.IndoorProfile;
-import site.bitlab16.datasources.profiles2.OutdoorProfile;
-
 public class Graphic extends JFrame implements Runnable {
 
     private BasicSimulator simulator;
@@ -39,19 +34,7 @@ public class Graphic extends JFrame implements Runnable {
         TimeInstant end = new TimeInstant(new GregorianCalendar(2023, Calendar.JANUARY, 15), 0);
         ArrayList<TimeSeries> series = new ArrayList<TimeSeries>();
 
-
-        final int[] weekdays = {Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY};
-        final int[] saturdays = {Calendar.SATURDAY, Calendar.SATURDAY};
-        BasicSource paolotti = new CityBuildingProfile(1, .2f, 1f, 1.8f, 3f, 1.1f);
-        BasicSource pratodellavalle = new OutdoorProfile(2, 1.2f, 3f, 1.5f, 1f, 3.5f);
-        BasicSource piazzagaribaldi = new OutdoorProfile(3, .8f, 1.5f, 2f, 2f, 1f);
-        BasicSource supermercato = new IndoorProfile(4, .012f, .5f, 2.f, 1f, .3f, weekdays );
-        BasicSource fiera = new IndoorProfile(5, .12f, .5f, 1.5f, 1.2f, 1.f, saturdays );
-
-        BasicSource[] sources = new BasicSource[] { piazzagaribaldi };
-        
-
-        for (int i = 0; i < simulator.getSources().length +2; i++) {
+        for (int i = 0; i < simulator.getSources().length; i++) {
             series.add( new TimeSeries("Series" + (i+1), Minute.class) );
         }
 
@@ -64,10 +47,7 @@ public class Graphic extends JFrame implements Runnable {
                 if (flow != -1) {
                     series.get(i).add(when.getMinute(), flow);
                 }
-                int flow2 = sources[i].getValue(when);
-                if (flow2 != -1) {
-                    series.get(i+1).add(when.getMinute(), flow2+1);
-                }
+                
             }
 
             when.advance();
@@ -85,7 +65,7 @@ public class Graphic extends JFrame implements Runnable {
         plot.setBackgroundPaint(new Color(80, 80, 80));
         ValueAxis y = new NumberAxis();
         y.setLowerBound(0);
-        y.setUpperBound(60);
+        y.setUpperBound(90);
         plot.setRangeAxis(y);
 
         ChartPanel panel = new ChartPanel(chart);

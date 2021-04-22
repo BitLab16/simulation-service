@@ -1,4 +1,4 @@
-package site.bitlab16.datasources.profiles2;
+package site.bitlab16.datasources.profiles;
 
 import java.util.Calendar;
 import java.util.Random;
