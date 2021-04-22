@@ -11,26 +11,28 @@ import site.bitlab16.datasources.weeklyData.WeeklyRawData;
 
 public class SimulatorDirector {
 
-    public BasicSimulator build(SimulatorType type) {
+    public Simulator build(SimulatorType type) {
 
         SimulatorBuilder builder;
 
         switch (type) {
             case KAFKA: /*TODO : SCOPPIA??? CONTROLLARE IL CAST!*/
                 builder = new KafkaSimulatorBuilderImpl();
+                builder.reset();
                 ((KafkaSimulatorBuilderImpl)builder).setOutput(new LinkedBlockingDeque<>());
                 break;
             case CSV:
                 builder = new CSVSimulatorBuilderImpl();
+                builder.reset();
                 break;
             case BASIC:
                 builder = new BasicSimulatorBuilderImpl();
+                builder.reset();
                 break;
             default:
                 return null;
 
         }
-        builder.reset();
         builder.setSimulatorType(type);
         builder.setSimulatedSource(getSources());
         return builder.build();
