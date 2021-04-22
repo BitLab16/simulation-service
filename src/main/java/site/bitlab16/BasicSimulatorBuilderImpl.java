@@ -1,8 +1,8 @@
 package site.bitlab16;
 
-import site.bitlab16.sources.SimulatedSource;
+import site.bitlab16.datasources.SimulatedSource;
 
-public class BasicSimulatorBuilderImpl implements SimulatorBuilder<String>{
+public class BasicSimulatorBuilderImpl implements SimulatorBuilder<String> {
 
     private BasicSimulator simulator;
 

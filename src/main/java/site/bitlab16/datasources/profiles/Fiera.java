@@ -1,39 +1,37 @@
-package site.bitlab16.sources.points;
+package site.bitlab16.datasources.profiles;
 
 import java.util.Calendar;
 
-import site.bitlab16.sources.SimulatedSource;
-
-public class Supermercato extends PuntoAllAperto {
+public class Fiera extends GenericIndoor {
 
     /* CREATION */
 
-    public Supermercato() {
-        baseMultiplier = 0.012f;
+    public Fiera() {
+        baseMultiplier = 0.12f;
     }
 
     
     /* METHODS */
 
-    static final int[] usableDays = {Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY};
+    static final int[] usableDays = {Calendar.SATURDAY, Calendar.SATURDAY};
     @Override
     protected int[] getUsableDays() {
         return usableDays;
     }
 
     @Override
-    public int getSeed() { return 4; }
+    public int getSeed() { return 5; }
 
     //imposto l'effetto degli eventi
     @Override
     protected int eventiEditValue(int flow, float modifier) {
-        return flow; // non ha eventi il supermercato!!
+        return Math.round((modifier+getIndiceEventi())*flow/getIndiceEventi());
     }
 
     //imposto l'effetto delle attività
     @Override
     protected int attivitaEditValue(int flow, float modifier) {
-        return Math.round((modifier+getIndiceAttivita())*flow/getIndiceAttivita());
+        return flow; // non ha attività la Fiera!!
     }
 
     
@@ -47,15 +45,15 @@ public class Supermercato extends PuntoAllAperto {
     }
     @Override
     public float getIndiceStagione() {
-        return 2;
+        return 1.5f;
     }
     @Override
     public float getIndiceAttivita() {
-        return .3f;
+        return 1;
     }
     @Override
     public float getIndiceEventi() {
-        return 1;
+        return 1.2f;
     }
 
 }

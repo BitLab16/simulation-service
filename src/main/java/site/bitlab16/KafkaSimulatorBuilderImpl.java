@@ -1,7 +1,7 @@
 package site.bitlab16;
 
+import site.bitlab16.datasources.SimulatedSource;
 import site.bitlab16.model.SourceRecord;
-import site.bitlab16.sources.SimulatedSource;
 
 import java.util.concurrent.BlockingDeque;
 

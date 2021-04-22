@@ -1,9 +1,9 @@
-package site.bitlab16.sources.points;
+package site.bitlab16.datasources.profiles;
 
-import site.bitlab16.sources.SimulatedSource;
-import site.bitlab16.sources.WeeklyRawData.SpecificWeekDayIterator;
+import site.bitlab16.datasources.SimulatedSource;
+import site.bitlab16.datasources.weeklyData.WeeklyRawData.SpecificWeekDayIterator;
 
-abstract class PuntoAllAperto extends SimulatedSource {
+abstract class GenericIndoor extends SimulatedSource {
     
 
     protected abstract int[] getUsableDays();

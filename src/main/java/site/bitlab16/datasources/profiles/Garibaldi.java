@@ -1,24 +1,39 @@
-package site.bitlab16.sources.points;
+package site.bitlab16.datasources.profiles;
 
 import java.util.Calendar;
 
-import site.bitlab16.sources.SimulatedSource;
-import site.bitlab16.sources.weeklyData.WeeklyRawData;
-import site.bitlab16.sources.weeklyData.WeeklyRawData.WeekDayIterator;
+import site.bitlab16.datasources.SimulatedSource;
+import site.bitlab16.datasources.weeklyData.WeeklyRawData;
+import site.bitlab16.datasources.weeklyData.WeeklyRawData.WeekDayIterator;
 
-public class Paolotti extends SimulatedSource { // PAOLOTTI
+public class Garibaldi extends SimulatedSource {
 
     /* CREATION */
 
-    public Paolotti() {
-        baseMultiplier = 0.2f;
+    public Garibaldi() {
+        baseMultiplier = 0.8f;
     }
 
     
     /* METHODS */
 
     @Override
-    public int getSeed() { return 1; }
+    public int getSeed() { return 3; }
+
+
+    private int curva1(int val, int i) {
+        if (i>95 && i<=110)
+            return val+3;
+        if (i>110 && i <=120)
+            return val+7;
+        if (i>120 && i<=180)
+            return val+11;
+        if (i>180 && i <=190)
+            return val+7;
+        if (i>190 && i <=200)
+            return val+3;
+        return val;
+    }
 
     @Override
     protected void generateData() {
@@ -26,23 +41,23 @@ public class Paolotti extends SimulatedSource { // PAOLOTTI
         WeekDayIterator iterator = new WeekDayIterator(random);
         //2018
         for(int i = 0; i < 288*365; i++) {
-                data2018[i] = iterator.getAndAdvance();
+                data2018[i] = curva1(iterator.getAndAdvance(), i%288);
         }
         //2019
         for(int i = 0; i < 288*365; i++) {
-                data2019[i] = iterator.getAndAdvance();
+                data2019[i] = curva1(iterator.getAndAdvance(), i%288);
         }
         //2020
         for(int i = 0; i < 288*366; i++) {
-                data2020[i] = iterator.getAndAdvance();
+                data2020[i] = curva1(iterator.getAndAdvance(), i%288);
         }
         //2021
         for(int i = 0; i < 288*365; i++) {
-                data2021[i] = iterator.getAndAdvance();
+                data2021[i] = curva1(iterator.getAndAdvance(), i%288);
         }
         //2022
         for(int i = 0; i < 288*365; i++) {
-                data2022[i] = iterator.getAndAdvance();
+                data2022[i] = curva1(iterator.getAndAdvance(), i%288);
         }
         
     }
@@ -75,7 +90,7 @@ public class Paolotti extends SimulatedSource { // PAOLOTTI
     @Override
     protected int seasonEditValue(int dayOfYear, int flow, int instant) {
         int shifted = Math.abs(dayOfYear-183);
-        double seasonMultiplier = 1 + getIndiceStagione()/10 * (Math.cos(shifted*Math.PI/183*2)/2 - Math.abs(shifted)/400d);
+        double seasonMultiplier = 0.8 + getIndiceStagione()/10 * (Math.cos(shifted*Math.PI/183*2)/2 - Math.abs(shifted)/400d);
         return (int)Math.round(seasonMultiplier*flow);
     }
 
@@ -98,20 +113,19 @@ public class Paolotti extends SimulatedSource { // PAOLOTTI
     }
     @Override
     public float getIndiceMeteo() {
-        return 1;
+        return 1.5f;
     }
     @Override
     public float getIndiceStagione() {
-        return 1.8f;
+        return 2;
     }
     @Override
     public float getIndiceAttivita() {
-        return 1.1f;
+        return 1;
     }
     @Override
     public float getIndiceEventi() {
-        return 3;
+        return 2f;
     }
-
 
 }

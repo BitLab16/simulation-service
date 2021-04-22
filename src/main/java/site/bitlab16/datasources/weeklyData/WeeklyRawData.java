@@ -1,11 +1,10 @@
-package site.bitlab16.sources.weeklyData;
+package site.bitlab16.datasources.weeklyData;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Random;
 import java.util.stream.Stream;
 

@@ -1,37 +1,37 @@
-package site.bitlab16.sources.points;
+package site.bitlab16.datasources.profiles;
 
 import java.util.Calendar;
 
-import site.bitlab16.sources.SimulatedSource;
-import site.bitlab16.sources.WeeklyRawData;
-import site.bitlab16.sources.WeeklyRawData.WeekDayIterator;
+import site.bitlab16.datasources.SimulatedSource;
+import site.bitlab16.datasources.weeklyData.WeeklyRawData;
+import site.bitlab16.datasources.weeklyData.WeeklyRawData.WeekDayIterator;
 
-public class Garibaldi extends SimulatedSource {
+public class Prato extends SimulatedSource {
 
     /* CREATION */
 
-    public Garibaldi() {
-        baseMultiplier = 0.8f;
+    public Prato() {
+        baseMultiplier = 1.2f;
     }
 
-    
+
     /* METHODS */
 
     @Override
-    public int getSeed() { return 3; }
+    public int getSeed() { return 2; }
 
 
     private int curva1(int val, int i) {
-        if (i>95 && i<=110)
-            return val+3;
+        if (i>100 && i<=110)
+            return val+5;
         if (i>110 && i <=120)
-            return val+7;
+            return val+10;
         if (i>120 && i<=180)
-            return val+11;
+            return val+15;
         if (i>180 && i <=190)
-            return val+7;
+            return val+10;
         if (i>190 && i <=200)
-            return val+3;
+            return val+5;
         return val;
     }
 
@@ -113,19 +113,19 @@ public class Garibaldi extends SimulatedSource {
     }
     @Override
     public float getIndiceMeteo() {
-        return 1.5f;
+        return 3;
     }
     @Override
     public float getIndiceStagione() {
-        return 2;
+        return 1.5f;
     }
     @Override
     public float getIndiceAttivita() {
-        return 1;
+        return 3.5f;
     }
     @Override
     public float getIndiceEventi() {
-        return 2f;
+        return 1f;
     }
 
 }

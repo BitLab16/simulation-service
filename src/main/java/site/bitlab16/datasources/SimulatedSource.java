@@ -1,4 +1,4 @@
-package site.bitlab16.sources;
+package site.bitlab16.datasources;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -11,8 +11,8 @@ import com.workday.insights.timeseries.arima.struct.ArimaParams;
 import com.workday.insights.timeseries.arima.struct.ForecastResult;
 
 import site.bitlab16.TimeInstant;
-import site.bitlab16.sources.concentration_factors.ConcentrationModifier;
-import site.bitlab16.sources.concentration_factors.WeatherStatus;
+import site.bitlab16.datasources.concentration_factors.ConcentrationModifier;
+import site.bitlab16.datasources.concentration_factors.WeatherStatus;
 
 /**
  * CLASSE ASTRATTA CHE RAPPRESENTA LA SORGENTE DATI

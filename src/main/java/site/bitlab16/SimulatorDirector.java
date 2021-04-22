@@ -2,12 +2,8 @@ package site.bitlab16;
 
 import java.util.concurrent.LinkedBlockingDeque;
 
-import site.bitlab16.sources.SimulatedSource;
-import site.bitlab16.sources.points.Fiera;
-import site.bitlab16.sources.points.Garibaldi;
-import site.bitlab16.sources.points.Paolotti;
-import site.bitlab16.sources.points.Prato;
-import site.bitlab16.sources.points.Supermercato;
+import site.bitlab16.datasources.SimulatedSource;
+import site.bitlab16.datasources.profiles.Garibaldi;
 
 public class SimulatorDirector {
 
@@ -27,17 +23,16 @@ public class SimulatorDirector {
                 builder = new BasicSimulatorBuilderImpl();
                 break;
             default:
-                builder = new BasicSimulatorBuilderImpl();
-                break;
+                return null;
 
         }
         builder.reset();
         builder.setSimulatorType(type);
 
         builder.setSimulatedSource(new SimulatedSource[] {
-             new Paolotti()/*,
+             /*new Paolotti(),
              new Prato(),
-             new Garibaldi(),
+             */new Garibaldi()/*,
              new Supermercato(),
              new Fiera()*/
         });

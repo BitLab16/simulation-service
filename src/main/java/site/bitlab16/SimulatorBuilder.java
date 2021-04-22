@@ -1,6 +1,6 @@
 package site.bitlab16;
 
-import site.bitlab16.sources.SimulatedSource;
+import site.bitlab16.datasources.SimulatedSource;
 
 public interface SimulatorBuilder<T> {
     void reset();
