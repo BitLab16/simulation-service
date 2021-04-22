@@ -21,7 +21,7 @@ public class App {
     
     public static void main( String[] args ) {
         var director = new SimulatorDirector();
-        BasicSimulator simulator = null;
+        Simulator simulator = null;
         switch (BUILD_MODE) {
 
             case CSV:

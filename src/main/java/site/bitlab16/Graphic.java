@@ -19,9 +19,9 @@ import org.jfree.data.time.TimeSeriesCollection;
 
 public class Graphic extends JFrame implements Runnable {
 
-    private BasicSimulator simulator;
+    private Simulator simulator;
 
-    public Graphic(BasicSimulator simulator, String title) {
+    public Graphic(Simulator simulator, String title) {
         super(title);
         this.simulator = simulator;
     }
@@ -31,7 +31,7 @@ public class Graphic extends JFrame implements Runnable {
 
         /// INIT VARS
         TimeInstant when = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 1), 0);
-        TimeInstant end = new TimeInstant(new GregorianCalendar(2023, Calendar.JANUARY, 15), 0);
+        TimeInstant end = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 2), 0);
         ArrayList<TimeSeries> series = new ArrayList<TimeSeries>();
 
         for (int i = 0; i < simulator.getSources().length; i++) {
