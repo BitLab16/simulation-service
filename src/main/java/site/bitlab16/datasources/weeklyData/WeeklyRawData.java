@@ -10,9 +10,7 @@ import java.util.stream.Stream;
 
 public class WeeklyRawData {
 
-    private static WeeklyRawData instance = null;
-
-
+    private ArrayList<Week> data = new ArrayList<>();
     public class Week {
 
         // da domenica a sabato
@@ -29,51 +27,7 @@ public class WeeklyRawData {
             return Arrays.copyOfRange(weekData, 288*(dayOfWeek-1), 288*dayOfWeek);
         }
     }
-    /**
-     * Iteratore per andare a istanziare gli array contenenti i flow dei vari anni
-     */
-    public static class WeekDayIterator {
-        protected Random random;
-        final WeeklyRawData weeks;
-        int[] week;
-        int instant;
-        public WeekDayIterator(final WeeklyRawData wrd, final Random random) {
-            weeks = wrd;
-            this.random = random;
-            reset();
-        }
-        void reset() {
-            int selectedWeek = random.nextInt(weeks.size());
-            week = weeks.get(selectedWeek).getWeek();
-            instant = 0;
-        }
-        public int getAndAdvance() {
-            int flow = week[instant];
-            if (++instant == week.length)
-                reset();
-            return flow;
-        }
-
-    }
-    /**
-     * Iteratore per andare a istanziare gli array contenenti i flow dei vari anni
-     */
-    public static class SpecificWeekDayIterator {
-        protected Random random;
-        final WeeklyRawData weeks;
-        public SpecificWeekDayIterator(final WeeklyRawData wrd, final Random random) {
-            weeks = wrd;
-            this.random = random;
-        }
-        public int[] getDayOfWeek(final int day) {
-            int selectedWeek = random.nextInt(weeks.size());
-            return weeks.get(selectedWeek).getDayOfWeek(day);
-        }
-
-    }
     
-
-    private ArrayList<Week> data = new ArrayList<>();
     
     public WeeklyRawData() {
         final Random random = new Random(10203040);

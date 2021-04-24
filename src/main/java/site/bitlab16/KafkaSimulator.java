@@ -11,7 +11,7 @@ public class KafkaSimulator implements Simulator {
 
     BasicSimulator simulator;
 
-    BlockingDeque<SourceRecord> outQueue;
+    private BlockingDeque<SourceRecord> outQueue;
 
     KafkaSimulator() {
         simulator = new BasicSimulator();

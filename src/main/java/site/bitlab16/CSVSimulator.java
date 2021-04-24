@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class CSVSimulator extends BasicSimulator {
+import site.bitlab16.datasources.BasicSource;
 
-    String outputFileName = "data.csv";
+public class CSVSimulator implements Simulator {
+
+    private String outputFileName = "data.csv";
+    private BasicSimulator simulator = new BasicSimulator();
 
     @Override
     public void writeOutput() {
@@ -23,23 +26,23 @@ public class CSVSimulator extends BasicSimulator {
 
         while ( ! when.equals(end) ) {
 
-            for (int i = 0; i < sources.length; i++) {
+            for (int i = 0; i < simulator.sources.length; i++) {
 
-                int flow = sources[i].getValue(when);
+                int flow = simulator.sources[i].getValue(when);
 
                 // csv
-                String line = sources[i].getSeed() + ",";
+                String line = simulator.sources[i].getSeed() + ",";
                 line += when.toString() + ',';
                 final int[] seasons = new int[]{0,0,0,1,1,1,2,2,2,3,3,3};
                 line += seasons[when.getDay().get(Calendar.MONTH)] + ",";
-                line += sources[i].getModifierMeteoAsEnum(when) + ",";
-                line += (sources[i].getEventi(when)==0 ? 0 : 1) + ",";
-                line += (sources[i].getAttivita(when)==0 ? 0 : 1) + ",";
-                line += (sources[i].getFestivita(when)==0 ? 0 : 1) + ",";
-                line += sources[i].getIndiceMeteo() + ",";
-                line += sources[i].getIndiceAttivita() + ",";
-                line += sources[i].getIndiceEventi() + ",";
-                line += sources[i].getIndiceOrario() + ",";
+                line += simulator.sources[i].getModifierMeteoAsEnum(when) + ",";
+                line += (simulator.sources[i].getEventi(when)==0 ? 0 : 1) + ",";
+                line += (simulator.sources[i].getAttivita(when)==0 ? 0 : 1) + ",";
+                line += (simulator.sources[i].getFestivita(when)==0 ? 0 : 1) + ",";
+                line += simulator.sources[i].getIndiceMeteo() + ",";
+                line += simulator.sources[i].getIndiceAttivita() + ",";
+                line += simulator.sources[i].getIndiceEventi() + ",";
+                line += simulator.sources[i].getIndiceOrario() + ",";
                 line += flow;
                 outfile.add(line);
             }
@@ -60,6 +63,26 @@ public class CSVSimulator extends BasicSimulator {
 
     public void setOutputFileName(String outputFileName) {
         this.outputFileName = outputFileName;
+    }
+
+    @Override
+    public SimulatorType getSimulatorType() {
+        return simulator.getSimulatorType();
+    }
+
+    @Override
+    public void setSimulatorType(SimulatorType type) {
+        simulator.setSimulatorType(type);
+    }
+
+    @Override
+    public BasicSource[] getSources() {
+        return simulator.getSources();
+    }
+
+    @Override
+    public void setSources(BasicSource[] sources) {
+        simulator.setSources(sources);
     }
 
 }

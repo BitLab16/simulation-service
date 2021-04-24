@@ -5,8 +5,8 @@ import java.util.Random;
 import site.bitlab16.TimeInstant;
 import site.bitlab16.datasources.BasicSource;
 import site.bitlab16.datasources.SourceValuesEditor;
+import site.bitlab16.datasources.weeklyData.SpecificWeekDayIterator;
 import site.bitlab16.datasources.weeklyData.WeeklyRawData;
-import site.bitlab16.datasources.weeklyData.WeeklyRawData.SpecificWeekDayIterator;
 
 public class IndoorProfile implements BasicSource, SourceValuesEditor {
 
