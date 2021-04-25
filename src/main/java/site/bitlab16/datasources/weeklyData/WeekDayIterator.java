@@ -27,6 +27,4 @@ public class WeekDayIterator {
         return flow;
     }
 
-}class WeekDayIterator {
-    
 }
