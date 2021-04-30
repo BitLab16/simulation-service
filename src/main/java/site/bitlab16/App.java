@@ -31,8 +31,8 @@ public class App {
 
             case RELEASE:
                 simulator = director.build(SimulatorType.KAFKA);
-                String kafkaBootstrapServers = "localhost:9092";
-                //String kafkaBootstrapServers = "kafka1:19091";
+                //String kafkaBootstrapServers = "localhost:9092";
+                String kafkaBootstrapServers = "kafka1:19091";
                 Consumer consumer = new Consumer("Simulatore 1", kafkaBootstrapServers, ((KafkaSimulator) simulator).getOutQueue());
                 ExecutorService executor = Executors.newCachedThreadPool();
                 executor.execute(consumer);
