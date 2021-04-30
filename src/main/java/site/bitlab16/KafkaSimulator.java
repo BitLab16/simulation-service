@@ -30,7 +30,7 @@ public class KafkaSimulator implements Simulator {
                 int flow = simulator.getSources()[i].getValue(when);
                 if (flow != -1) {
                     outQueue.add(new SourceRecord(
-                            1L,
+                            simulator.getSources()[i].getSeed(),
                             flow,
                             new Timestamp(when.getTimeInMillis()),
                             simulator.getSources()[i].getModifierMeteoAsEnum(when),
