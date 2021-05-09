@@ -7,14 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.GregorianCalendar;
 
+import org.jfree.data.time.Minute;
 import org.junit.Test;
 
 public class TimeInstantTest {
 
-    TimeInstant instant;
-
     @Test
-    public void TimeInstantConstructorTest() {
+    public void constructorTest() {
         new TimeInstant(new GregorianCalendar(2020,1,1), 286);
         assertThrows(
             IllegalArgumentException.class,
@@ -66,8 +65,25 @@ public class TimeInstantTest {
     @Test
     public void toStringTest() {
         TimeInstant instant = new TimeInstant(new GregorianCalendar(2020,5,15), 127);
-        assertEquals("Wrong Stringification", instant.toString(), "2020-06-15 10:35");
-
+        assertEquals("Wrong Stringification",  "2020-06-15 10:35", instant.toString());
     }
 
+    @Test
+    public void toStringAsInstantTest() {
+        TimeInstant instant = new TimeInstant(new GregorianCalendar(2020,5,15), 127);
+        assertEquals("Wrong Stringification as instant", "2020-06-15/127", instant.toStringAsInstant());
+    }
+
+    @Test
+    public void getTimeInMillisTest() {
+        TimeInstant instant = new TimeInstant(new GregorianCalendar(2020,5,15), 127);
+        assertEquals("Wrong millis since 1970 conversion", 1592210100000L, instant.getTimeInMillis());
+    }
+
+    @Test
+    public void getMinuteTest() {
+        TimeInstant instant = new TimeInstant(new GregorianCalendar(2020,5,15), 127);
+        Minute minute = new Minute(35,10,15,5,2020);
+        assertEquals(1, minute.compareTo(instant.getInstant()));
+    }
 }

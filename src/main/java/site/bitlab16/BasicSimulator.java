@@ -8,7 +8,7 @@ public class BasicSimulator implements Simulator {
 
     protected BasicSource sources[];
 
-    public BasicSimulator(){}
+    public BasicSimulator() {}
 
     public SimulatorType getSimulatorType() {
         return type;

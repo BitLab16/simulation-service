@@ -1,24 +1,44 @@
 package site.bitlab16;
 
-//import org.junit.After;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import site.bitlab16.datasources.BasicSource;
+import site.bitlab16.datasources.profiles.CityBuildingProfile;
+import site.bitlab16.datasources.weeklyData.WeeklyRawData;
+import site.bitlab16.model.SourceRecord;
 public class KafkaSimulatorTest {
 
-	//private KafkaSimulator simulator;
+	private KafkaSimulator kafkaSimulator;
 
 	@Before
 	public void setup() {
-		//this.simulator = null;//new KafkaSimulator();
+		this.kafkaSimulator = new KafkaSimulator();
 	}
 
 	@Test
-	public void mainTest() {
-		
-		//KafkaSimulator.main(null);
-
-		//assertTrue("Simulatore NON iniz correttamente", simulator != null);
+	public void writeOutputTest() {
+		kafkaSimulator.setOutQueue(new LinkedBlockingDeque<>());
+		BasicSource paolotti = new CityBuildingProfile(1, .2f, 1f, 1.8f, 3f, 1.1f, new WeeklyRawData());
+		kafkaSimulator.setSources(new BasicSource[]{paolotti});
+		kafkaSimulator.writeOutput();
+		// 420768 ==> i dati del paolotti
+		assertEquals(420768, kafkaSimulator.getOutQueue().size());
+		//TODO: come testare che i dati siano anche corretti?
+		// non eccede lo scopo dello unit testing?
 	}
+
+	@Test
+	public void outQueueTest() {
+		kafkaSimulator.setOutQueue(new LinkedBlockingDeque<>());
+		BlockingDeque<SourceRecord> qeque = kafkaSimulator.getOutQueue();
+		assertEquals(0, qeque.size());
+	}
+
 
 }

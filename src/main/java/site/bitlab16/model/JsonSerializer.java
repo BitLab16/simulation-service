@@ -11,14 +11,14 @@ public class JsonSerializer implements Serializer<SourceRecord> {
 
     private ObjectMapper mapper;
     private JsonSchemaGenerator jsonSchemaGenerator;
+    
+    public JsonSerializer() {
+        this(null);
+    }
 
     public JsonSerializer(ObjectMapper mapper) {
         this.mapper = mapper;
         this.jsonSchemaGenerator = new JsonSchemaGenerator(this.mapper);
-    }
-
-    public JsonSerializer() {
-        this(null);
     }
 
     @Override
