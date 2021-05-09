@@ -1,9 +1,14 @@
 package site.bitlab16.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Field;
 import java.sql.Timestamp;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +35,41 @@ public class JsonSerializerTest {
         assertTrue(new String(output).contains("\"detectionTime\":60910223400000"));
         assertTrue(new String(output).contains("\"isHoliday\":false"));
         assertTrue(new String(output).contains("\"weatherIndex\":7.0"));
+    }
+
+    @Test
+    public void constructor2Test() throws NoSuchFieldException, IllegalAccessException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper2;
+        serializer = new JsonSerializer(mapper);
+
+        Field field = JsonSerializer.class.getDeclaredField("mapper");
+        field.setAccessible(true);
+        mapper2 = (ObjectMapper)field.get(serializer);
+        
+        assertEquals(mapper, mapper2);
+    }
+
+    @Test
+    public void counfigureTest() throws NoSuchFieldException, IllegalAccessException {
+        serializer.configure(null, false);
+        
+        Field field = JsonSerializer.class.getDeclaredField("mapper");
+        field.setAccessible(true);
+        ObjectMapper mapper = (ObjectMapper)field.get(serializer);
+
+        assertNotNull(mapper);
+    }
+
+    @Test
+    public void closeTest() throws NoSuchFieldException, IllegalAccessException {
+        serializer.close();
+
+        Field field = JsonSerializer.class.getDeclaredField("mapper");
+        field.setAccessible(true);
+        ObjectMapper mapper = (ObjectMapper)field.get(serializer);
+        
+        assertNull(mapper);
     }
 
 }
