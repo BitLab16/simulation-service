@@ -41,8 +41,8 @@ public class KafkaSimulator implements Simulator {
                             simulator.getSources()[i].getIndiceStagione(),
                             simulator.getSources()[i].getIndiceAttivita()));
                 }
-                when.advance();
             }
+            when.advance();
         }
     }
 

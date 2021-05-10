@@ -18,7 +18,7 @@ public class WeeklyRawDataTest {
 	}
 
 	@Test
-	public void constructorType() {
+	public void constructorTest() {
         assertNotNull(wrd);
         assertEquals(wrd.size(), 100);
         int avg = 0;
