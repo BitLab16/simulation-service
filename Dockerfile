@@ -1,6 +1,10 @@
-FROM openjdk:11-jre-slim
+FROM maven:3.6.3-adoptopenjdk-15 AS MAVEN_ENV
+WORKDIR /build/
+COPY pom.xml /build
+COPY src /build/src
+COPY data /build/data
+RUN mvn clean package -DskipTests=true
 
-COPY target/simulation-service-1.0-SNAPSHOT-jar-with-dependencies.jar /app.jar
-COPY data /data
-
-CMD ["java", "-jar", "/app.jar"]
+FROM adoptopenjdk/openjdk15:jre-15.0.2_7-alpine
+COPY  --from=MAVEN_ENV /build/target/simulation-service-*jar-with-dependencies.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
