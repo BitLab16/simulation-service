@@ -63,7 +63,7 @@
     <dependency>
       <groupId>io.confluent</groupId>
       <artifactId>kafka-json-schema-serializer</artifactId>
-      <version>6.1.0</version>
+      <version>6.1.1</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
     <dependency>
