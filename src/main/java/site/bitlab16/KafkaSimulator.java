@@ -21,7 +21,7 @@ public class KafkaSimulator implements Simulator {
     @Override
     public void writeOutput() {
 
-        TimeInstant when = new TimeInstant(new GregorianCalendar(2019, Calendar.JANUARY, 1), 0);
+        TimeInstant when = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 1), 0);
         TimeInstant end = new TimeInstant(new GregorianCalendar(2023, Calendar.JANUARY, 1), 0);
         final int[] seasons = new int[]{0,0,0,1,1,1,2,2,2,3,3,3};
 

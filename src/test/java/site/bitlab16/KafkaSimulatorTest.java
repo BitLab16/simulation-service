@@ -28,7 +28,7 @@ public class KafkaSimulatorTest {
 		kafkaSimulator.setSources(new BasicSource[]{paolotti});
 		kafkaSimulator.writeOutput();
 		// 420768 ==> i dati del paolotti
-		assertEquals(420768, kafkaSimulator.getOutQueue().size());
+		assertEquals(525888, kafkaSimulator.getOutQueue().size());
 		//TODO: come testare che i dati siano anche corretti?
 		// non eccede lo scopo dello unit testing?
 	}
