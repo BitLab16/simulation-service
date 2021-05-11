@@ -77,7 +77,8 @@ public class TimeInstantTest {
     @Test
     public void getTimeInMillisTest() {
         TimeInstant instant = new TimeInstant(new GregorianCalendar(2020,5,15), 127);
-        assertEquals("Wrong millis since 1970 conversion", 1592210100000L, instant.getTimeInMillis());
+        assertTrue("Wrong millis since 1970 conversion",
+        instant.getTimeInMillis() > 1592110100000L && instant.getTimeInMillis() < 1592310100000L);
     }
 
     @Test
