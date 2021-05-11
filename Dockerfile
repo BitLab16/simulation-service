@@ -7,5 +7,5 @@ RUN mvn clean package -DskipTests=true
 
 FROM adoptopenjdk/openjdk15:jre-15.0.2_7-alpine
 COPY  --from=MAVEN_ENV /build/target/simulation-service-*jar-with-dependencies.jar app.jar
-COPY --from=MAVEN_ENV /build/data/ data/
+COPY --from=MAVEN_ENV /build/data data
 ENTRYPOINT ["java", "-jar", "app.jar"]
