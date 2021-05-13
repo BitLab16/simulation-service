@@ -32,16 +32,16 @@ public class Graphic extends JFrame implements Runnable {
         /// INIT VARS
         TimeInstant when = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 1), 0);
         TimeInstant end = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 2), 0);
-        ArrayList<TimeSeries> series = new ArrayList<TimeSeries>();
+        ArrayList<TimeSeries> series = new ArrayList<>();
 
-        for (int i = 0; i < simulator.getSources().length; i++) {
+        for (var i = 0; i < simulator.getSources().length; i++) {
             series.add( new TimeSeries("Series" + (i+1), Minute.class) );
         }
 
         /// GET USEFUL DATA INTO VARS
         while ( ! when.equals(end) ) {
 
-            for (int i = 0; i < simulator.getSources().length; i++) {
+            for (var i = 0; i < simulator.getSources().length; i++) {
 
                 int flow = simulator.getSources()[i].getValue(when);
                 if (flow != -1) {
@@ -54,7 +54,7 @@ public class Graphic extends JFrame implements Runnable {
         }
 
         /// DISPLAY STUFF
-        TimeSeriesCollection tsc = new TimeSeriesCollection();
+        var tsc = new TimeSeriesCollection();
         for (TimeSeries s : series)
             tsc.addSeries(s);
 
@@ -68,7 +68,7 @@ public class Graphic extends JFrame implements Runnable {
         y.setUpperBound(90);
         plot.setRangeAxis(y);
 
-        ChartPanel panel = new ChartPanel(chart);
+        var panel = new ChartPanel(chart);
         setContentPane(panel);
     }
 }

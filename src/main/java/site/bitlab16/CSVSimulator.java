@@ -26,14 +26,14 @@ public class CSVSimulator implements Simulator {
 
         while ( ! when.equals(end) ) {
 
-            for (int i = 0; i < simulator.sources.length; i++) {
+            for (var i = 0; i < simulator.sources.length; i++) {
 
                 int flow = simulator.sources[i].getValue(when);
 
                 // csv
                 String line = simulator.sources[i].getSeed() + ",";
                 line += when.toString() + ',';
-                final int[] seasons = new int[]{0,0,0,1,1,1,2,2,2,3,3,3};
+                final var seasons = new int[]{0,0,0,1,1,1,2,2,2,3,3,3};
                 line += seasons[when.getDay().get(Calendar.MONTH)] + ",";
                 line += simulator.sources[i].getModifierMeteoAsEnum(when) + ",";
                 line += (simulator.sources[i].getEventi(when)==0 ? 0 : 1) + ",";
@@ -49,7 +49,7 @@ public class CSVSimulator implements Simulator {
 
             when.advance();
         }
-        try (FileWriter writer = new FileWriter(outputFileName) ) {
+        try (var writer = new FileWriter(outputFileName) ) {
             for(String line: outfile)
                 writer.write(line + System.lineSeparator());
         } catch (IOException e) {

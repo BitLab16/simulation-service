@@ -6,9 +6,7 @@ public class BasicSimulator implements Simulator {
 
     protected SimulatorType type;
 
-    protected BasicSource sources[];
-
-    public BasicSimulator() {}
+    protected BasicSource[] sources;
 
     public SimulatorType getSimulatorType() {
         return type;
@@ -26,6 +24,8 @@ public class BasicSimulator implements Simulator {
         this.sources = sources;
     }
 
-    public void writeOutput() {}
+    public void writeOutput() {
+        throw new UnsupportedOperationException();
+    }
 
 }

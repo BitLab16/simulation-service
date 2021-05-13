@@ -40,8 +40,8 @@ public class SimulatorDirector {
 
     private BasicSource[] getSources() {
         WeeklyRawData wrd = new WeeklyRawData();
-        final int[] weekdays = {Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY};
-        final int[] saturdays = {Calendar.SATURDAY, Calendar.SATURDAY};
+        final var weekdays = new int[]{Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY};
+        final var saturdays = new int[]{Calendar.SATURDAY, Calendar.SATURDAY};
         BasicSource paolotti = new CityBuildingProfile(1, .2f, 1f, 1.8f, 3f, 1.1f, wrd);
         BasicSource pratodellavalle = new OutdoorProfile(2, 1.2f, 3f, 1.5f, 1f, 3.5f, wrd);
         BasicSource piazzagaribaldi = new OutdoorProfile(3, .8f, 1.5f, 2f, 2f, 1f, wrd);

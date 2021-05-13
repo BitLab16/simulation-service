@@ -41,4 +41,8 @@ public class SourceRecord {
     public Timestamp getDetectionTime() {
         return detectionTime;
     }
+
+    public Long getPoint() {
+        return point;
+    }
 }

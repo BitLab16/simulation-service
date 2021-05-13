@@ -16,7 +16,7 @@ public class Consumer implements Runnable, AutoCloseable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Consumer.class);
 
-    private static final String TOPIC = "SIMULATOR";
+    private static final String TOPIC = "SIMULATOR-SOURCE_";
 
     private final org.apache.kafka.clients.producer.Producer<Long, SourceRecord> kafkaProducer;
 
@@ -48,8 +48,9 @@ public class Consumer implements Runnable, AutoCloseable {
                 var sourceRecord = queue.take();
                 if(sourceRecord.getDetectionTime().toInstant().toEpochMilli() > timestamp)
                     Thread.sleep(300000);
-                ProducerRecord<Long, SourceRecord> kafkaRecord = new ProducerRecord<>(TOPIC, timestamp, sourceRecord);
+                ProducerRecord<Long, SourceRecord> kafkaRecord = new ProducerRecord<>(TOPIC+sourceRecord.getPoint(), timestamp, sourceRecord);
                 kafkaProducer.send(kafkaRecord);
+                //LOGGER.info("Sent new record");
             }
         } catch (InterruptedException ex) {
             kafkaProducer.flush();

@@ -27,14 +27,26 @@ public class TimeInstant {
     }
 
     @Override
-    public boolean equals(Object other) {
-        TimeInstant i = (TimeInstant)other;
-        return (this.day.compareTo(i.day)==0) ? (this.instant == i.instant) : (false);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TimeInstant that = (TimeInstant) o;
+
+        if (instant != that.instant) return false;
+        return day.equals(that.day);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = day.hashCode();
+        result = 31 * result + instant;
+        return result;
     }
 
     @Override
     public String toString() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        var sdf = new SimpleDateFormat("yyyy-MM-dd");
         int hour = instant/12;
         String hh = hour + "";
         if (hour < 10)
@@ -53,11 +65,11 @@ public class TimeInstant {
     // INFATTI USA 'Minute' DI JFREE
     public Minute getMinute() {
         int yyyy = day.get(Calendar.YEAR);
-        int MM = day.get(Calendar.MONTH)+1;
+        int month = day.get(Calendar.MONTH)+1;
         int dd = day.get(Calendar.DATE);
         int hh = instant/12;
         int mm = (instant%12)*5;
-        return new Minute(mm, hh, dd, MM, yyyy);
+        return new Minute(mm, hh, dd, month, yyyy);
     }
 
     public long getTimeInMillis() {
