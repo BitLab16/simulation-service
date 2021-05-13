@@ -4,15 +4,15 @@ import site.bitlab16.datasources.BasicSource;
 
 public interface Simulator {
 
-    public SimulatorType getSimulatorType();
+    SimulatorType getSimulatorType();
 
-    public void setSimulatorType(SimulatorType type);
+    void setSimulatorType(SimulatorType type);
 
-    public BasicSource[] getSources();
+    BasicSource[] getSources();
 
-    public void setSources(BasicSource[] sources);
+    void setSources(BasicSource[] sources);
 
-    public void writeOutput();
+    void writeOutput();
 
     
 }

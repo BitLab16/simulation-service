@@ -15,13 +15,20 @@ public class App {
         RELEASE, // deployabile in un docker, no X11
         CSV
     }
+
+    enum ApplicationConnection {
+        LOCAL,
+        DOCKER
+    }
     
-    final public static ApplicationScope BUILD_MODE = ApplicationScope.RELEASE;
+    public static final ApplicationScope BUILD_MODE = ApplicationScope.RELEASE;
+
+    public static final ApplicationConnection CONNECTION_MODE = ApplicationConnection.DOCKER;
 
     
     public static void main( String[] args ) {
         var director = new SimulatorDirector();
-        Simulator simulator = null;
+        Simulator simulator;
         switch (BUILD_MODE) {
 
             case CSV:
@@ -31,9 +38,13 @@ public class App {
 
             case RELEASE:
                 simulator = director.build(SimulatorType.KAFKA);
-                //String kafkaBootstrapServers = "localhost:9092";
-                String kafkaBootstrapServers = "kafka1:19091";
-                Consumer consumer = new Consumer("Simulatore 1", kafkaBootstrapServers, ((KafkaSimulator) simulator).getOutQueue());
+                var kafkaBootstrapServers = "";
+                if (CONNECTION_MODE == ApplicationConnection.DOCKER) {
+                    kafkaBootstrapServers = "kafka1:19091";
+                } else {
+                    kafkaBootstrapServers = "localhost:9092";
+                }
+                var consumer = new Consumer("Simulatore 1", kafkaBootstrapServers, ((KafkaSimulator) simulator).getOutQueue());
                 ExecutorService executor = Executors.newCachedThreadPool();
                 executor.execute(consumer);
                 simulator.writeOutput();
@@ -41,7 +52,7 @@ public class App {
             
             case DEBUG:
                 simulator = director.build(SimulatorType.BASIC);
-                Graphic graphic = new Graphic(simulator, "Dati simulati");
+                var graphic = new Graphic(simulator, "Dati simulati");
                 SwingUtilities.invokeLater(() -> {
                     graphic.setSize(800, 400);
                     graphic.setLocationRelativeTo(null);

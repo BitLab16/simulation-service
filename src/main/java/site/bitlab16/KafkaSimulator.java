@@ -21,21 +21,21 @@ public class KafkaSimulator implements Simulator {
     @Override
     public void writeOutput() {
 
-        TimeInstant when = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 1), 0);
-        TimeInstant end = new TimeInstant(new GregorianCalendar(2023, Calendar.JANUARY, 1), 0);
-        final int[] seasons = new int[]{0,0,0,1,1,1,2,2,2,3,3,3};
+        var when = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 1), 0);
+        var end = new TimeInstant(new GregorianCalendar(2023, Calendar.JANUARY, 1), 0);
+        final var seasons = new int[]{0,0,0,1,1,1,2,2,2,3,3,3};
 
         while ( ! when.equals(end) ) {
-            for (int i = 0; i < simulator.getSources().length; i++) {
+            for (var i = 0; i < simulator.getSources().length; i++) {
                 int flow = simulator.getSources()[i].getValue(when);
                 if (flow != -1) {
                     outQueue.add(new SourceRecord(
-                            1L*simulator.getSources()[i].getSeed(),
+                            (long) simulator.getSources()[i].getSeed(),
                             flow,
                             new Timestamp(when.getTimeInMillis()),
                             simulator.getSources()[i].getModifierMeteoAsEnum(when),
                             seasons[when.getDay().get(Calendar.MONTH)],
-                            simulator.getSources()[i].getFestivita(when)==0 ? false : true,//holiday
+                            simulator.getSources()[i].getFestivita(when) != 0,//holiday
                             simulator.getSources()[i].getIndiceOrario(),
                             simulator.getSources()[i].getIndiceMeteo(),
                             simulator.getSources()[i].getIndiceStagione(),
