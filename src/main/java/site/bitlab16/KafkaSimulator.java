@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.concurrent.BlockingDeque;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import site.bitlab16.datasources.BasicSource;
 import site.bitlab16.model.SourceRecord;
 
@@ -13,6 +15,8 @@ public class KafkaSimulator implements Simulator {
     BasicSimulator simulator;
 
     private BlockingDeque<SourceRecord> outQueue;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSimulator.class);
 
     KafkaSimulator() {
         simulator = new BasicSimulator();
@@ -27,9 +31,11 @@ public class KafkaSimulator implements Simulator {
 
         while ( ! when.equals(end) ) {
             for (var i = 0; i < simulator.getSources().length; i++) {
+                long millisecond = System.currentTimeMillis();
+                var timestamp = new Timestamp(millisecond);
                 int flow = simulator.getSources()[i].getValue(when);
                 if (flow != -1) {
-                    outQueue.add(new SourceRecord(
+                    var sourceRecord = new SourceRecord(
                             (long) simulator.getSources()[i].getSeed(),
                             flow,
                             new Timestamp(when.getTimeInMillis()),
@@ -39,7 +45,17 @@ public class KafkaSimulator implements Simulator {
                             simulator.getSources()[i].getIndiceOrario(),
                             simulator.getSources()[i].getIndiceMeteo(),
                             simulator.getSources()[i].getIndiceStagione(),
-                            simulator.getSources()[i].getIndiceAttivita()));
+                            simulator.getSources()[i].getIndiceAttivita());
+                    try {
+                        if(sourceRecord.getDetectionTime().after(timestamp)) {
+                            LOGGER.debug("last detection time: {}", sourceRecord.getDetectionTime().toLocalDateTime());
+                            LOGGER.debug("Waiting for new data, thread sleep");
+                            Thread.sleep(300000);
+                        }
+                        outQueue.add(sourceRecord);
+                    } catch (InterruptedException ex) {
+                        LOGGER.error(ex.getMessage());
+                    }
                 }
             }
             when.advance();

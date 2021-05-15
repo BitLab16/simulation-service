@@ -7,6 +7,7 @@ import org.apache.kafka.common.serialization.LongSerializer;
 import site.bitlab16.model.JsonSerializer;
 import site.bitlab16.model.SourceRecord;
 
+import java.sql.Timestamp;
 import java.util.Properties;
 import java.util.concurrent.BlockingDeque;
 import org.slf4j.Logger;
@@ -44,11 +45,10 @@ public class Consumer implements Runnable, AutoCloseable {
     public void run() {
         try {
             while(true) {
-                long timestamp = System.currentTimeMillis();
+                long millisecond = System.currentTimeMillis();
+                //var timestamp = new Timestamp(millisecond);
                 var sourceRecord = queue.take();
-                if(sourceRecord.getDetectionTime().toInstant().toEpochMilli() > timestamp)
-                    Thread.sleep(300000);
-                ProducerRecord<Long, SourceRecord> kafkaRecord = new ProducerRecord<>(TOPIC+sourceRecord.getPoint(), timestamp, sourceRecord);
+                ProducerRecord<Long, SourceRecord> kafkaRecord = new ProducerRecord<>(TOPIC+sourceRecord.getPoint(), millisecond, sourceRecord);
                 kafkaProducer.send(kafkaRecord);
                 //LOGGER.info("Sent new record");
             }
