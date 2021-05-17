@@ -22,20 +22,17 @@ public class SourceRecord {
                         int weather,
                         int season,
                         boolean isHoliday,
-                        float timeIndex,
-                        float weatherIndex,
-                        float seasonIndex,
-                        float attractionsIndex) {
+                        Indexes indexes) {
         this.point = point;
         this.flow = flow;
         this.detectionTime = detectionTime;
         this.weather = weather;
         this.season = season;
         this.isHoliday = isHoliday;
-        this.timeIndex = timeIndex;
-        this.weatherIndex = weatherIndex;
-        this.seasonIndex = seasonIndex;
-        this.attractionsIndex = attractionsIndex;
+        this.timeIndex = indexes.getTimeIndex();
+        this.weatherIndex = indexes.getWeatherIndex();
+        this.seasonIndex = indexes.getSeasonIndex();
+        this.attractionsIndex = indexes.getAttractionsIndex();
     }
 
     public Timestamp getDetectionTime() {

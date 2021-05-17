@@ -8,6 +8,7 @@ import java.util.concurrent.BlockingDeque;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import site.bitlab16.datasources.BasicSource;
+import site.bitlab16.model.Indexes;
 import site.bitlab16.model.SourceRecord;
 
 public class KafkaSimulator implements Simulator {
@@ -42,10 +43,12 @@ public class KafkaSimulator implements Simulator {
                             simulator.getSources()[i].getModifierMeteoAsEnum(when),
                             seasons[when.getDay().get(Calendar.MONTH)],
                             simulator.getSources()[i].getFestivita(when) != 0,//holiday
-                            simulator.getSources()[i].getIndiceOrario(),
-                            simulator.getSources()[i].getIndiceMeteo(),
-                            simulator.getSources()[i].getIndiceStagione(),
-                            simulator.getSources()[i].getIndiceAttivita());
+                            new Indexes(
+                                simulator.getSources()[i].getIndiceOrario(),
+                                simulator.getSources()[i].getIndiceMeteo(),
+                                simulator.getSources()[i].getIndiceStagione(),
+                                simulator.getSources()[i].getIndiceAttivita())
+                    );
                     try {
                         if(sourceRecord.getDetectionTime().after(timestamp)) {
                             LOGGER.debug("last detection time: {}", sourceRecord.getDetectionTime().toLocalDateTime());

@@ -15,7 +15,8 @@ public class SourceRecordTest {
 	@Before
 	public void setup() {
         timestamp = new Timestamp(2000, 2, 3, 11, 30, 00, 00);
-        record = new SourceRecord(1L, 2, timestamp, 4, 5, false, 6, 7, 8, 9);
+        record = new SourceRecord(1L, 2, timestamp, 4, 5, false,
+                new Indexes(6, 7, 8, 9));
 	}
 
     @Test

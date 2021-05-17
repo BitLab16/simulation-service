@@ -30,7 +30,8 @@ public class JsonSerializerTest {
     @Test
     public void serializeTest() {
         Timestamp timestamp = new Timestamp(2000, 2, 3, 11, 30, 00, 00);
-        SourceRecord record = new SourceRecord(1L, 2, timestamp, 4, 5, false, 6, 7, 8, 9);
+        SourceRecord record = new SourceRecord(1L, 2, timestamp, 4, 5, false,
+                new Indexes(6, 7, 8, 9));
         byte[] output = serializer.serialize("", record);
         assertTrue(new String(output).contains("\"detectionTime\":"));
         assertTrue(new String(output).contains("\"isHoliday\":false"));
