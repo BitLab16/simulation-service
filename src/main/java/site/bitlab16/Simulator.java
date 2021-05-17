@@ -12,7 +12,7 @@ public interface Simulator {
 
     void setSources(BasicSource[] sources);
 
-    void writeOutput();
+    boolean writeOutput();
 
     
 }

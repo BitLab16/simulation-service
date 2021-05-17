@@ -14,10 +14,10 @@ public class CSVSimulator implements Simulator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CSVSimulator.class);
     private String outputFileName = "data.csv";
-    private BasicSimulator simulator = new BasicSimulator();
+    private final BasicSimulator simulator = new BasicSimulator();
 
     @Override
-    public void writeOutput() {
+    public boolean writeOutput() {
 
         /// INIT VARS
         var when = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 1), 0);
@@ -58,10 +58,7 @@ public class CSVSimulator implements Simulator {
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
-    }
-
-    public String getOutputFileName() {
-        return outputFileName;
+        return true;
     }
 
     public void setOutputFileName(String outputFileName) {

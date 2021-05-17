@@ -22,6 +22,8 @@ public class Consumer implements Runnable, AutoCloseable {
 
     private final BlockingDeque<SourceRecord> queue;
 
+    private boolean stopCondition = false;
+
     public Consumer(String clientName, String bootstrapServer, BlockingDeque<SourceRecord> queue) {
 
         this.queue = queue;
@@ -35,6 +37,10 @@ public class Consumer implements Runnable, AutoCloseable {
         kafkaProducer = new KafkaProducer<>(properties);
     }
 
+    public void setStopCondition(boolean stopCondition) {
+        this.stopCondition = stopCondition;
+    }
+
     @Override
     public void close() {
         kafkaProducer.close();
@@ -43,7 +49,7 @@ public class Consumer implements Runnable, AutoCloseable {
     @Override
     public void run() {
         try {
-            while(true) {
+            while(!stopCondition) {
                 long millisecond = System.currentTimeMillis();
                 var sourceRecord = queue.take();
                 ProducerRecord<Long, SourceRecord> kafkaRecord = new ProducerRecord<>(TOPIC+sourceRecord.getPoint(), millisecond, sourceRecord);

@@ -24,7 +24,7 @@ public class BasicSimulator implements Simulator {
         this.sources = sources;
     }
 
-    public void writeOutput() {
+    public boolean writeOutput() {
         throw new UnsupportedOperationException();
     }
 

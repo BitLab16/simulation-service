@@ -24,7 +24,7 @@ public class KafkaSimulator implements Simulator {
     }
 
     @Override
-    public void writeOutput() {
+    public boolean writeOutput() {
 
         var when = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 1), 0);
         var end = new TimeInstant(new GregorianCalendar(2023, Calendar.JANUARY, 1), 0);
@@ -64,6 +64,7 @@ public class KafkaSimulator implements Simulator {
             }
             when.advance();
         }
+        return true;
     }
 
     public BlockingDeque<SourceRecord> getOutQueue() {

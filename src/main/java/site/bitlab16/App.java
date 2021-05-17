@@ -47,7 +47,7 @@ public class App {
                 var consumer = new Consumer("Simulatore 1", kafkaBootstrapServers, ((KafkaSimulator) simulator).getOutQueue());
                 ExecutorService executor = Executors.newCachedThreadPool();
                 executor.execute(consumer);
-                simulator.writeOutput();
+                consumer.setStopCondition(simulator.writeOutput());
                 break;
             
             case DEBUG:
