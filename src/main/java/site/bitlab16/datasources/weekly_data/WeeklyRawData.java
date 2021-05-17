@@ -1,5 +1,8 @@
 package site.bitlab16.datasources.weekly_data;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,6 +13,7 @@ import java.util.stream.Stream;
 
 public class WeeklyRawData {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(WeeklyRawData.class);
     private ArrayList<Week> data = new ArrayList<>();
     public class Week {
 
@@ -47,7 +51,7 @@ public class WeeklyRawData {
                         weekData[i*12 + j] = Math.round(flow+slope*j) + (random.nextInt() % modulo);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage());
             }
 
             data.add(new Week(weekData));

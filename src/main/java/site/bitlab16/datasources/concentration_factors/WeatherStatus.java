@@ -6,10 +6,13 @@ import java.nio.file.Files;
 import java.util.Calendar;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import site.bitlab16.TimeInstant;
 
 public class WeatherStatus {
-    
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(WeatherStatus.class);
     private float[] dataMeteo;
     public WeatherStatus(final String filename, final int size) {
         dataMeteo = new float[size];
@@ -20,7 +23,7 @@ public class WeatherStatus {
                 dataMeteo[i*2+1] = Float.parseFloat(linesMeteo[i]);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
     }
     

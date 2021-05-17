@@ -20,7 +20,7 @@ public class WeeklyRawDataTest {
 	@Test
 	public void constructorTest() {
         assertNotNull(wrd);
-        assertEquals(wrd.size(), 100);
+        assertEquals(100, wrd.size());
         int avg = 0;
         for (int i = 0; i < wrd.size(); i++)
             avg += Arrays.stream(wrd.get(i).getWeek()).sum() / wrd.size();

@@ -6,10 +6,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import site.bitlab16.datasources.BasicSource;
 
 public class CSVSimulator implements Simulator {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CSVSimulator.class);
     private String outputFileName = "data.csv";
     private BasicSimulator simulator = new BasicSimulator();
 
@@ -17,8 +20,8 @@ public class CSVSimulator implements Simulator {
     public void writeOutput() {
 
         /// INIT VARS
-        TimeInstant when = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 1), 0);
-        TimeInstant end = new TimeInstant(new GregorianCalendar(2023, Calendar.JANUARY, 1), 0);
+        var when = new TimeInstant(new GregorianCalendar(2018, Calendar.JANUARY, 1), 0);
+        var end = new TimeInstant(new GregorianCalendar(2023, Calendar.JANUARY, 1), 0);
 
         ArrayList<String> outfile = new ArrayList<>();
         outfile.add("ID,timestamp,stagione,meteo,eventi,attivita,festivita," +
@@ -53,7 +56,7 @@ public class CSVSimulator implements Simulator {
             for(String line: outfile)
                 writer.write(line + System.lineSeparator());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
     }
 

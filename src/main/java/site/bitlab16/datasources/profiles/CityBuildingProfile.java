@@ -31,7 +31,7 @@ public class CityBuildingProfile implements BasicSource, SourceValuesEditor {
         data[2] = new int[288*366]; // 2020 leap year
         data[3] = new int[288*365]; // 2021
         data[4] = new int[288*365]; // 2022
-        WeekDayIterator iterator = new WeekDayIterator(wrd, new Random(seed));
+        var iterator = new WeekDayIterator(wrd, new Random(seed));
         for(var i = 0; i < 288*365; i++) // 2018
                 data[0][i] = iterator.getAndAdvance();
         for(var i = 0; i < 288*365; i++) //2019

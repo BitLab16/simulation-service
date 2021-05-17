@@ -16,7 +16,7 @@ public class WeekDayIterator {
         reset();
     }
     private void reset() {
-        int selectedWeek = random.nextInt(weeks.size());
+        var selectedWeek = random.nextInt(weeks.size());
         week = weeks.get(selectedWeek).getWeek();
         instant = 0;
     }

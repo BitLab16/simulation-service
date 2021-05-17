@@ -28,7 +28,7 @@ public class IndoorProfile implements BasicSource, SourceValuesEditor {
         data[2] = new int[288*366]; // 2020 leap year
         data[3] = new int[288*365]; // 2021
         data[4] = new int[288*365]; // 2022
-        SpecificWeekDayIterator iterator = new SpecificWeekDayIterator(wrd, new Random(seed));
+        var iterator = new SpecificWeekDayIterator(wrd, new Random(seed));
         int[] day;
         //2018
         for(var i = 0; i < 365; i++) {

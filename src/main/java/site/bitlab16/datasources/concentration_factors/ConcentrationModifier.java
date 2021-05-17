@@ -1,5 +1,8 @@
 package site.bitlab16.datasources.concentration_factors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,7 +12,8 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class ConcentrationModifier {
-    
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConcentrationModifier.class);
     
     /**
      * Mappa che associa una data (rappresentata come stringa) ad una lista di DailyTimeFrame
@@ -23,7 +27,7 @@ public class ConcentrationModifier {
                 add(s[0], 12*Integer.parseInt(s[1]), 12*Integer.parseInt(s[2]), Integer.parseInt(s[3]));
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
     }
 

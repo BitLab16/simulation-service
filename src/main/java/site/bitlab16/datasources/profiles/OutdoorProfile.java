@@ -32,7 +32,7 @@ public class OutdoorProfile implements BasicSource, SourceValuesEditor {
         data[3] = new int[288*365]; // 2021
         data[4] = new int[288*365]; // 2022
         
-        WeekDayIterator iterator = new WeekDayIterator(wrd, new Random(seed));
+        var iterator = new WeekDayIterator(wrd, new Random(seed));
         for(var i = 0; i < 288*365; i++) // 2018
                 data[0][i] = roundTheMiddle(iterator.getAndAdvance(), i%288);
         for(var i = 0; i < 288*365; i++) // 2019

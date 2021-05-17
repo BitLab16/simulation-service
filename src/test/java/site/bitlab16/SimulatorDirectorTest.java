@@ -1,12 +1,11 @@
 package site.bitlab16;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import site.bitlab16.datasources.BasicSource;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SimulatorDirectorTest {
 
@@ -26,21 +25,21 @@ public class SimulatorDirectorTest {
     public void buildKafkaTest() {
         Simulator simulator = director.build(SimulatorType.KAFKA);
         assertTrue(simulator instanceof KafkaSimulator);
-        assertTrue(SimulatorType.KAFKA == simulator.getSimulatorType());
+        assertSame(SimulatorType.KAFKA, simulator.getSimulatorType());
     }
 
     @Test
     public void buildCSVTest() {
         Simulator simulator = director.build(SimulatorType.CSV);
         assertTrue(simulator instanceof CSVSimulator);
-        assertTrue(SimulatorType.CSV == simulator.getSimulatorType());
+        assertSame(SimulatorType.CSV, simulator.getSimulatorType());
     }
 
     @Test
     public void buildBasicTest() {
         Simulator simulator = director.build(SimulatorType.BASIC);
         assertTrue(simulator instanceof BasicSimulator);
-        assertTrue(SimulatorType.BASIC == simulator.getSimulatorType());
+        assertSame(SimulatorType.BASIC, simulator.getSimulatorType());
     }
 
     @Test

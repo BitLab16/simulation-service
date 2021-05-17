@@ -1,5 +1,6 @@
 package site.bitlab16;
 
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.Before;
@@ -16,6 +17,6 @@ public class BasicSimulatorTest {
 	@Test
 	public void simulatorType() {
 		this.basicSimulator.setSimulatorType(SimulatorType.BASIC);
-		assertTrue(SimulatorType.BASIC == basicSimulator.getSimulatorType());
+		assertSame(SimulatorType.BASIC, basicSimulator.getSimulatorType());
 	}
 }
