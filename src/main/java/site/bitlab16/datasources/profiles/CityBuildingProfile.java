@@ -34,11 +34,11 @@ public class CityBuildingProfile implements BasicSource, SourceValuesEditor {
         var iterator = new WeekDayIterator(wrd, new Random(seed));
         for(var i = 0; i < 288*365; i++) // 2018
                 data[0][i] = iterator.getAndAdvance();
-        for(var i = 0; i < 288*365; i++) //2019
+        for(var i = 0; i < 288*365; i++) // 2019
             data[1][i] = iterator.getAndAdvance();
         for(var i = 0; i < 288*366; i++) // 2020
                 data[2][i] = iterator.getAndAdvance();
-        for(var i = 0; i < 288*365; i++) //2021
+        for(var i = 0; i < 288*365; i++) // 2021
             data[3][i] = iterator.getAndAdvance();
         for(var i = 0; i < 288*365; i++) // 2022
             data[4][i] = iterator.getAndAdvance();
