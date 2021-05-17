@@ -3,10 +3,7 @@ package site.bitlab16;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.Before;
-import org.junit.Test;
-import site.bitlab16.datasources.BasicSource;
-import site.bitlab16.datasources.profiles.CityBuildingProfile;
-import site.bitlab16.datasources.weeklyData.WeeklyRawData;
+
 public class GraphicTest {
 
 	private Graphic graphic;

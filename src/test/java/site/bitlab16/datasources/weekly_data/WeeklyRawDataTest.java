@@ -1,4 +1,4 @@
-package site.bitlab16.datasources.weeklyData;
+package site.bitlab16.datasources.weekly_data;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

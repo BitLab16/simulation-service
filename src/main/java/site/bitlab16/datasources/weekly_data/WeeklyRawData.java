@@ -1,4 +1,4 @@
-package site.bitlab16.datasources.weeklyData;
+package site.bitlab16.datasources.weekly_data;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,9 +14,9 @@ public class WeeklyRawData {
     public class Week {
 
         // da domenica a sabato
-        private int weekData[];
+        private int[] weekData;
 
-        Week(int a[]) {
+        Week(int[] a) {
             weekData = a;
         }
 
@@ -30,12 +30,12 @@ public class WeeklyRawData {
     
     
     public WeeklyRawData() {
-        final Random random = new Random(10203040);
-        for (int filenum = 1; filenum < 101; filenum++) {
-            int weekData[] = new int[288*7];
+        final var random = new Random(10203040);
+        for (var filenum = 1; filenum < 101; filenum++) {
+            var weekData = new int[288*7];
             try ( Stream<String> lineStream =  Files.lines(new File("data/weeks/week" + filenum + ".csv").toPath()) ) {
                 String[] lines = lineStream.toArray(String[]::new);
-                for(int i = 0; i < lines.length; i++) {
+                for(var i = 0; i < lines.length; i++) {
                     int flow = getFlow(lines, i);
                     int flowNext =  getFlow(lines, i+1);
                     float slope = (flowNext-flow)/12f;
@@ -43,7 +43,7 @@ public class WeeklyRawData {
                     weekData[i*12] =  flow;
                     // aggiungo 11 punti sulla linea (:05,:10,:15,...,:55)
                     int modulo = Math.abs((flowNext-flow)/6)+2;
-                    for (int j = 1; j < 12; j++)
+                    for (var j = 1; j < 12; j++)
                         weekData[i*12 + j] = Math.round(flow+slope*j) + (random.nextInt() % modulo);
                 }
             } catch (IOException e) {
@@ -54,7 +54,7 @@ public class WeeklyRawData {
         }
     }
 
-    private static int getFlow(final String lines[], int i) {
+    private static int getFlow(final String[] lines, int i) {
         if (i == lines.length )
             i--;
         float fetched = Float.parseFloat(lines[i].split(",")[1]) * 500;

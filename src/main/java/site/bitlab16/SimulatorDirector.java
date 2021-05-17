@@ -7,7 +7,7 @@ import site.bitlab16.datasources.BasicSource;
 import site.bitlab16.datasources.profiles.CityBuildingProfile;
 import site.bitlab16.datasources.profiles.IndoorProfile;
 import site.bitlab16.datasources.profiles.OutdoorProfile;
-import site.bitlab16.datasources.weeklyData.WeeklyRawData;
+import site.bitlab16.datasources.weekly_data.WeeklyRawData;
 
 public class SimulatorDirector {
 
@@ -16,22 +16,19 @@ public class SimulatorDirector {
         SimulatorBuilder builder;
 
         switch (type) {
-            case KAFKA: /*TODO : SCOPPIA??? CONTROLLARE IL CAST!*/
+            case KAFKA:
                 builder = new KafkaSimulatorBuilderImpl();
                 builder.reset();
-                ((KafkaSimulatorBuilderImpl)builder).setOutput(new LinkedBlockingDeque<>());
+                builder.setOutput(new LinkedBlockingDeque<>());
                 break;
             case CSV:
                 builder = new CSVSimulatorBuilderImpl();
                 builder.reset();
                 break;
-            case BASIC:
+            default:
                 builder = new BasicSimulatorBuilderImpl();
                 builder.reset();
                 break;
-            default:
-                return null;
-
         }
         builder.setSimulatorType(type);
         builder.setSimulatedSource(getSources());
@@ -39,7 +36,7 @@ public class SimulatorDirector {
     }
 
     private BasicSource[] getSources() {
-        WeeklyRawData wrd = new WeeklyRawData();
+        var wrd = new WeeklyRawData();
         final var weekdays = new int[]{Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY};
         final var saturdays = new int[]{Calendar.SATURDAY, Calendar.SATURDAY};
         BasicSource paolotti = new CityBuildingProfile(1, .2f, 1f, 1.8f, 3f, 1.1f, wrd);

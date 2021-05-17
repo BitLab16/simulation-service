@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import site.bitlab16.datasources.BasicSource;
 import site.bitlab16.datasources.profiles.CityBuildingProfile;
-import site.bitlab16.datasources.weeklyData.WeeklyRawData;
+import site.bitlab16.datasources.weekly_data.WeeklyRawData;
 import site.bitlab16.model.SourceRecord;
 public class KafkaSimulatorTest {
 

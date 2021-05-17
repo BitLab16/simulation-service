@@ -3,13 +3,12 @@ package site.bitlab16.datasources.profiles;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.lang.reflect.Method;
 import java.util.Calendar;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import site.bitlab16.datasources.weeklyData.WeeklyRawData;
+import site.bitlab16.datasources.weekly_data.WeeklyRawData;
 public class IndoorProfileTest {
 
 

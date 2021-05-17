@@ -14,10 +14,10 @@ import site.bitlab16.datasources.concentration_factors.WeatherStatus;
 class TypicalDataSource implements BasicSource {
 
     
-    private static final int len_18_19_20_21_22 = 288*365*4 + 288*366;
-    private static final Calendar start = new GregorianCalendar(2018, Calendar.JANUARY, 1);
-    private static final Calendar end = new GregorianCalendar(2022, Calendar.DECEMBER, 31);
-    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final int LEN_18_19_20_21_22 = 288*365*4 + 288*366;
+    private final Calendar start = new GregorianCalendar(2018, Calendar.JANUARY, 1);
+    private final Calendar end = new GregorianCalendar(2022, Calendar.DECEMBER, 31);
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     
     private final int seed;
     private final float baseMultiplier;
@@ -64,7 +64,7 @@ class TypicalDataSource implements BasicSource {
         this.data2021 = data[3];
         this.data2022 = data[4];
 
-        dataMeteo = new WeatherStatus("data/meteo.csv", len_18_19_20_21_22);
+        dataMeteo = new WeatherStatus("data/meteo.csv", LEN_18_19_20_21_22);
         dataFestivita = new ConcentrationModifier("data/festivita.csv");
         dataAttivita = new ConcentrationModifier("data/attivita_source" + getSeed() + ".csv");
         dataEventi = new ConcentrationModifier("data/eventi_source" + getSeed() + ".csv");
@@ -129,7 +129,7 @@ class TypicalDataSource implements BasicSource {
         int year;
         int instant;
         int offset;
-        for (int i = 0; i < len_18_19_20_21_22; i++) {
+        for (var i = 0; i < LEN_18_19_20_21_22; i++) {
             date = dateFormat.format(when.getTime());
             year = Integer.parseInt(date.split("-")[0]);
             instant = i % 288;

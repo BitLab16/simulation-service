@@ -1,4 +1,4 @@
-package site.bitlab16.datasources.weeklyData;
+package site.bitlab16.datasources.weekly_data;
 
 import java.util.Random;
 
@@ -13,7 +13,7 @@ import java.util.Random;
             this.random = random;
         }
         public int[] getDayOfWeek(final int day) {
-            int selectedWeek = random.nextInt(weeks.size());
+            var selectedWeek = random.nextInt(weeks.size());
             return weeks.get(selectedWeek).getDayOfWeek(day);
         }
 

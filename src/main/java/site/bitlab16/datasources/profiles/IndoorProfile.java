@@ -5,8 +5,8 @@ import java.util.Random;
 import site.bitlab16.TimeInstant;
 import site.bitlab16.datasources.BasicSource;
 import site.bitlab16.datasources.SourceValuesEditor;
-import site.bitlab16.datasources.weeklyData.SpecificWeekDayIterator;
-import site.bitlab16.datasources.weeklyData.WeeklyRawData;
+import site.bitlab16.datasources.weekly_data.SpecificWeekDayIterator;
+import site.bitlab16.datasources.weekly_data.WeeklyRawData;
 
 public class IndoorProfile implements BasicSource, SourceValuesEditor {
 
@@ -22,7 +22,7 @@ public class IndoorProfile implements BasicSource, SourceValuesEditor {
         final int[] usableDays,
         final WeeklyRawData wrd) {
 
-        int[][] data = new int[5][];
+        var data = new int[5][];
         data[0] = new int[288*365]; // 2018
         data[1] = new int[288*365]; // 2019
         data[2] = new int[288*366]; // 2020 leap year
@@ -31,33 +31,33 @@ public class IndoorProfile implements BasicSource, SourceValuesEditor {
         SpecificWeekDayIterator iterator = new SpecificWeekDayIterator(wrd, new Random(seed));
         int[] day;
         //2018
-        for(int i = 0; i < 365; i++) {
+        for(var i = 0; i < 365; i++) {
             day = getInputDay(iterator, usableDays);
-            for (int instant = 0; instant < 288; instant++)
+            for (var instant = 0; instant < 288; instant++)
                 data[0][i*288+instant] = day[instant]-usableDays.length;
         }
         //2019
-        for(int i = 0; i < 365; i++) {
+        for(var i = 0; i < 365; i++) {
             day = getInputDay(iterator, usableDays);
-            for (int instant = 0; instant < 288; instant++)
+            for (var instant = 0; instant < 288; instant++)
                 data[1][i*288+instant] = day[instant]-usableDays.length;
         }
         //2020
-        for(int i = 0; i < 366; i++) {
+        for(var i = 0; i < 366; i++) {
             day = getInputDay(iterator, usableDays);
-            for (int instant = 0; instant < 288; instant++)
+            for (var instant = 0; instant < 288; instant++)
                 data[2][i*288+instant] = day[instant]-usableDays.length;
         }
         //2021
-        for(int i = 0; i < 365; i++) {
+        for(var i = 0; i < 365; i++) {
             day = getInputDay(iterator, usableDays);
-            for (int instant = 0; instant < 288; instant++)
+            for (var instant = 0; instant < 288; instant++)
                 data[3][i*288+instant] = day[instant]-usableDays.length;
         }
         //2022
-        for(int i = 0; i < 365; i++) {
+        for(var i = 0; i < 365; i++) {
             day = getInputDay(iterator, usableDays);
-            for (int instant = 0; instant < 288; instant++)
+            for (var instant = 0; instant < 288; instant++)
                 data[4][i*288+instant] = day[instant]-usableDays.length;
         }
 
@@ -118,11 +118,11 @@ public class IndoorProfile implements BasicSource, SourceValuesEditor {
     
 
     private int[] getInputDay(final SpecificWeekDayIterator iterator, final int[] usableDay) {
-        int[] sum = new int[288];
+        var sum = new int[288];
         int[] day;
         for (int selectedDay : usableDay) {
             day = iterator.getDayOfWeek(selectedDay);
-            for (int i = 0; i < 288; i++)
+            for (var i = 0; i < 288; i++)
                 sum[i] += day[i];
         }
         return sum;

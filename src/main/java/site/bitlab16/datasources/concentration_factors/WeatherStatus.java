@@ -14,8 +14,8 @@ public class WeatherStatus {
     public WeatherStatus(final String filename, final int size) {
         dataMeteo = new float[size];
         try ( Stream<String> meteoStream = Files.lines(new File(filename).toPath()) ) {
-            String linesMeteo[] = meteoStream.toArray(String[]::new);
-            for (int i = 0; i < size/2; i++) {
+            String[] linesMeteo = meteoStream.toArray(String[]::new);
+            for (var i = 0; i < size/2; i++) {
                 dataMeteo[i*2] = Float.parseFloat(linesMeteo[i]);
                 dataMeteo[i*2+1] = Float.parseFloat(linesMeteo[i]);
             }
@@ -25,10 +25,10 @@ public class WeatherStatus {
     }
     
     public float getModifierMeteo(int offset) {
-        float ret = 0f;
+        var ret = 0f;
         int x0 = Math.max(offset-50, 0);
         int x1 = Math.min(offset+50, dataMeteo.length);
-        float cumulative = 0f;
+        var cumulative = 0f;
         for (int j = x0; j < x1; j++)
             cumulative += dataMeteo[j];
         ret += cumulative/(x1-x0);
@@ -48,7 +48,7 @@ public class WeatherStatus {
     }
     
     public float getModifierMeteo(TimeInstant when) {
-        int offset = 0;
+        var offset = 0;
         int year = when.getDay().get(Calendar.YEAR);
         switch (year) {
             case 2022: offset += 288*365*3 + 288*366; break; //add 2021

@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import org.junit.Before;
 import org.junit.Test;
 
-import site.bitlab16.datasources.weeklyData.WeeklyRawData;
+import site.bitlab16.datasources.weekly_data.WeeklyRawData;
 public class OutdoorProfileTest {
 
 

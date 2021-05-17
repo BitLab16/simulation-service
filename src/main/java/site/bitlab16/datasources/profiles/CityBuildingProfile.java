@@ -6,8 +6,8 @@ import java.util.Random;
 import site.bitlab16.TimeInstant;
 import site.bitlab16.datasources.BasicSource;
 import site.bitlab16.datasources.SourceValuesEditor;
-import site.bitlab16.datasources.weeklyData.WeekDayIterator;
-import site.bitlab16.datasources.weeklyData.WeeklyRawData;
+import site.bitlab16.datasources.weekly_data.WeekDayIterator;
+import site.bitlab16.datasources.weekly_data.WeeklyRawData;
 
 public class CityBuildingProfile implements BasicSource, SourceValuesEditor {
 
@@ -25,22 +25,22 @@ public class CityBuildingProfile implements BasicSource, SourceValuesEditor {
 
         this.wrd = wrd;
 
-        int[][] data = new int[5][];
+        var data = new int[5][];
         data[0] = new int[288*365]; // 2018
         data[1] = new int[288*365]; // 2019
         data[2] = new int[288*366]; // 2020 leap year
         data[3] = new int[288*365]; // 2021
         data[4] = new int[288*365]; // 2022
         WeekDayIterator iterator = new WeekDayIterator(wrd, new Random(seed));
-        for(int i = 0; i < 288*365; i++) // 2018
+        for(var i = 0; i < 288*365; i++) // 2018
                 data[0][i] = iterator.getAndAdvance();
-        for(int i = 0; i < 288*365; i++) //2019
+        for(var i = 0; i < 288*365; i++) //2019
             data[1][i] = iterator.getAndAdvance();
-        for(int i = 0; i < 288*366; i++) // 2020
+        for(var i = 0; i < 288*366; i++) // 2020
                 data[2][i] = iterator.getAndAdvance();
-        for(int i = 0; i < 288*365; i++) //2021
+        for(var i = 0; i < 288*365; i++) //2021
             data[3][i] = iterator.getAndAdvance();
-        for(int i = 0; i < 288*365; i++) // 2022
+        for(var i = 0; i < 288*365; i++) // 2022
             data[4][i] = iterator.getAndAdvance();
 
         basicSource = new TypicalDataSource(data, seed, baseMultiplier, indiceMeteo, indiceStagione, indiceEventi, indiceAttivita);

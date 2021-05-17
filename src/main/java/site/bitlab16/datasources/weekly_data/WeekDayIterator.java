@@ -1,4 +1,4 @@
-package site.bitlab16.datasources.weeklyData;
+package site.bitlab16.datasources.weekly_data;
 
 import java.util.Random;
 
@@ -7,7 +7,7 @@ import java.util.Random;
  */
 public class WeekDayIterator {
     private Random random;
-    final private WeeklyRawData weeks;
+    private final WeeklyRawData weeks;
     int[] week;
     int instant;
     public WeekDayIterator(final WeeklyRawData wrd, final Random random) {

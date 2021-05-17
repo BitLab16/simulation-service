@@ -55,6 +55,7 @@ public class KafkaSimulator implements Simulator {
                         outQueue.add(sourceRecord);
                     } catch (InterruptedException ex) {
                         LOGGER.error(ex.getMessage());
+                        Thread.currentThread().interrupt();
                     }
                 }
             }
